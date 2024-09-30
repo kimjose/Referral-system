@@ -1,0 +1,698 @@
+[
+  {
+    "subcounty_id": 515,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "INOI",
+    "chu_name": "MBETI"
+  },
+  {
+    "subcounty_id": 515,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "INOI",
+    "chu_name": "THAITA"
+  },
+  {
+    "subcounty_id": 515,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "INOI",
+    "chu_name": "NYAGITHUCI"
+  },
+  {
+    "subcounty_id": 515,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "INOI",
+    "chu_name": "KARIKO"
+  },
+  {
+    "subcounty_id": 515,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "INOI",
+    "chu_name": "NDIMI"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "KAITHERI"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "GITHIORO"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "KIARITHA"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "MIRINGAIRI"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "KIMANDI"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "KIANDIERI"
+  },
+  {
+    "subcounty_id": 514,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KERUGOYA",
+    "chu_name": "KARIA"
+  },
+  {
+    "subcounty_id": 512,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "MUTIRA",
+    "chu_name": "KIAMAINA"
+  },
+  {
+    "subcounty_id": 512,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "MUTIRA",
+    "chu_name": "KIRUNDA"
+  },
+  {
+    "subcounty_id": 512,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "MUTIRA",
+    "chu_name": "MUTIRA"
+  },
+  {
+    "subcounty_id": 512,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "MUTIRA",
+    "chu_name": "KAGUMO A"
+  },
+  {
+    "subcounty_id": 512,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "MUTIRA",
+    "chu_name": "KAGUMO B"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "NGARU"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "NDUUINI"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "GATUTO"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "KIRIMA"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "KIAGA"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "KIANJEGE"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "MUTITU"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "KATHARE"
+  },
+  {
+    "subcounty_id": 513,
+    "SUBCOUNTY": "KIRINYAGA CENTRAL",
+    "WARD": "KANYEKINI",
+    "chu_name": "MUKITHI"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Kiamanyeki"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Kiarukungu"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Maisha Kamili"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Githogondo"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Kiumbu"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Ndindiruku"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Murubara"
+  },
+  {
+    "subcounty_id": 503,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Tebere",
+    "chu_name": "Nderwa"
+  },
+  {
+    "subcounty_id": 500,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Nyangati",
+    "chu_name": "Kutus"
+  },
+  {
+    "subcounty_id": 500,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Nyangati",
+    "chu_name": "Kithiriti"
+  },
+  {
+    "subcounty_id": 500,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Nyangati",
+    "chu_name": "Kimbimbi"
+  },
+  {
+    "subcounty_id": 500,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Nyangati",
+    "chu_name": "Nyangati"
+  },
+  {
+    "subcounty_id": 500,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Nyangati",
+    "chu_name": "Kirimara"
+  },
+  {
+    "subcounty_id": 500,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Nyangati",
+    "chu_name": "Kangu"
+  },
+  {
+    "subcounty_id": 501,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Murinduko",
+    "chu_name": "Kamunyange"
+  },
+  {
+    "subcounty_id": 501,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Murinduko",
+    "chu_name": "South Ngariama"
+  },
+  {
+    "subcounty_id": 501,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Murinduko",
+    "chu_name": "Ikulungu"
+  },
+  {
+    "subcounty_id": 501,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Murinduko",
+    "chu_name": "Riagicheru"
+  },
+  {
+    "subcounty_id": 501,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Murinduko",
+    "chu_name": "Miuu"
+  },
+  {
+    "subcounty_id": 501,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Murinduko",
+    "chu_name": "Mugamba Ciura"
+  },
+  {
+    "subcounty_id": 502,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Gathigiriri",
+    "chu_name": "Gathigiriri"
+  },
+  {
+    "subcounty_id": 502,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Gathigiriri",
+    "chu_name": "Mahigaini"
+  },
+  {
+    "subcounty_id": 502,
+    "SUBCOUNTY": "MWEA EAST",
+    "WARD": "Gathigiriri",
+    "chu_name": "Mathangauta"
+  },
+  {
+    "subcounty_id": 505,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Baragwi",
+    "chu_name": "Gatu Health Community Unit"
+  },
+  {
+    "subcounty_id": 505,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Baragwi",
+    "chu_name": "Kianjiru Community Unit"
+  },
+  {
+    "subcounty_id": 505,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Baragwi",
+    "chu_name": "Raimu Community Health Unit"
+  },
+  {
+    "subcounty_id": 505,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Baragwi",
+    "chu_name": "Rukenya Community Health Unit"
+  },
+  {
+    "subcounty_id": 505,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Baragwi",
+    "chu_name": "Rwambiti Health  Community Unit"
+  },
+  {
+    "subcounty_id": 505,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Baragwi",
+    "chu_name": "Thimu Community Health Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Gachigi Community Health Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Kiangwenyi Community Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Kiritini  Community Health Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Mikarara Community Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Mutige Health Community Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Ngiroche Community Health Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Njuku East Community Health Unit"
+  },
+  {
+    "subcounty_id": 504,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Kabare",
+    "chu_name": "Njuku West Community Health Unit"
+  },
+  {
+    "subcounty_id": 508,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Karumandi",
+    "chu_name": "Kariru Community Unit"
+  },
+  {
+    "subcounty_id": 508,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Karumandi",
+    "chu_name": "Kiaruri Community Health Unit"
+  },
+  {
+    "subcounty_id": 508,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Karumandi",
+    "chu_name": "Ndunduini Community Health Unit"
+  },
+  {
+    "subcounty_id": 508,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Karumandi",
+    "chu_name": "Thumaita Communit Health Unit"
+  },
+  {
+    "subcounty_id": 507,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Ngariama",
+    "chu_name": "Guama Health Community Unit"
+  },
+  {
+    "subcounty_id": 507,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Ngariama",
+    "chu_name": "Kiamutugu Community Health Unit"
+  },
+  {
+    "subcounty_id": 507,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Ngariama",
+    "chu_name": "Nyangeni Community Health Unit"
+  },
+  {
+    "subcounty_id": 507,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Ngariama",
+    "chu_name": "Rung'eto Community Health Unit"
+  },
+  {
+    "subcounty_id": 506,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Njukiini",
+    "chu_name": "Kanjuu Community Health Unit"
+  },
+  {
+    "subcounty_id": 506,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Njukiini",
+    "chu_name": "Mirichi Community Health Unit"
+  },
+  {
+    "subcounty_id": 506,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Njukiini",
+    "chu_name": "Ngerwe Community Health Unit"
+  },
+  {
+    "subcounty_id": 506,
+    "SUBCOUNTY": "Kirinyaga East",
+    "WARD": "Njukiini",
+    "chu_name": "Ngiriambu Community Health Unit"
+  },
+  {
+    "subcounty_id": 497,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "KANGAI",
+    "chu_name": "KOMBOINI"
+  },
+  {
+    "subcounty_id": 497,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "KANGAI",
+    "chu_name": "KANGAI"
+  },
+  {
+    "subcounty_id": 497,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "KANGAI",
+    "chu_name": "KAGUMOINI"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "KABIRIRI"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "KINYAGA"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "KIAMACIRI"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "KIRWARA"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "KIANDEGWA"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "RUKANGA"
+  },
+  {
+    "subcounty_id": 496,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "MUTITHI",
+    "chu_name": "KIRINDAHI"
+  },
+  {
+    "subcounty_id": 498,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "THIBA",
+    "chu_name": "NGUKA"
+  },
+  {
+    "subcounty_id": 498,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "THIBA",
+    "chu_name": "KIRATINA"
+  },
+  {
+    "subcounty_id": 498,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "THIBA",
+    "chu_name": "MBUINJERU"
+  },
+  {
+    "subcounty_id": 498,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "THIBA",
+    "chu_name": "NYAIKUNGU"
+  },
+  {
+    "subcounty_id": 499,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "WAMUMU",
+    "chu_name": "CIAGINI"
+  },
+  {
+    "subcounty_id": 499,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "WAMUMU",
+    "chu_name": "MARURUMO"
+  },
+  {
+    "subcounty_id": 499,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "WAMUMU",
+    "chu_name": "RURII"
+  },
+  {
+    "subcounty_id": 499,
+    "SUBCOUNTY": "KIRINYAGA NORTH",
+    "WARD": "WAMUMU",
+    "chu_name": "NGANGA"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "kianjanga"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Gitaku"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Maitharui"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Kagioini"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Kanyokora"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "karimaini"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Kabonge"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Mukure"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Muragara"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "kagio town"
+  },
+  {
+    "subcounty_id": 509,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Mukure",
+    "chu_name": "Kithumbu"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "Mjini"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "Sagana"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "Nyangio"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "Thigirichi"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "Mukui"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "Gacharu"
+  },
+  {
+    "subcounty_id": 511,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kariti",
+    "chu_name": "None"
+  },
+  {
+    "subcounty_id": 510,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kiine",
+    "chu_name": "Ruiru"
+  },
+  {
+    "subcounty_id": 510,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kiine",
+    "chu_name": "Kibingoti"
+  },
+  {
+    "subcounty_id": 510,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kiine",
+    "chu_name": "Nguguini"
+  },
+  {
+    "subcounty_id": 510,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kiine",
+    "chu_name": "Kiangai"
+  },
+  {
+    "subcounty_id": 510,
+    "SUBCOUNTY": "Kirinyaga West",
+    "WARD": "Kiine",
+    "chu_name": "Kihuro"
+  }
+]

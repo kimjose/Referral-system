@@ -219,7 +219,7 @@
 
                                                 <div class=" pb-1">
                                                     <label for="additionalNotes">Additional Notes</label>
-                                                    <textarea cols="30" rows="10" class="form-control" id="additionalNotes" name="additionalNotes" style="height: 100px;" placeholder='Additional Medical Notes' required></textarea>
+                                                    <textarea cols="30" rows="10" class="form-control" id="additionalNotes" name="additionalNotes" style="height: 100px;" placeholder='Additional Medical Notes' ></textarea>
                                                 </div>
                                             </fieldset>
                                         </div>
