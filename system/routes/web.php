@@ -9,7 +9,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FacilityController;
-
+use App\Http\Controllers\Phq9Controller;
 
 Route::get('/', [UserController::class, 'signIn'])->name('user.signIn');
 Route::post('/user-login', [UserController::class, 'login'])->name('user.login');
@@ -83,6 +83,10 @@ Route::group(['middleware' => 'auth'], function () {
     //triage routes
     Route::get('/triages', [TriageController::class, 'addTriage'])->name('triages.addTriage');
     Route::post('/store-form', [TriageController::class, 'store'])->name('triages.store-form');
+
+    // PHQ9 Assessment
+    Route::get('phq9',[Phq9Controller::class, 'addAssessment'])->name('phq9.addAssessment');
+    Route::post('phq9/store', [Phq9Controller::class, 'storeAssessment'])->name('phq9.storeAssessment');
 
     //admin routes
     Route::get('/admin/dashboard/charts', [AdminController::class, 'admin'])->name('admin.dashboard.charts');

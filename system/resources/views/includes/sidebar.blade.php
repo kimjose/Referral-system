@@ -26,6 +26,11 @@
                         <i class="bi bi-circle"></i><span>Triage</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('phq9.addAssessment') }}">
+                        <i class="bi bi-circle"></i><span>PHQ9 Assessment</span>
+                    </a>
+                </li>
             </ul>
         </li><!-- End Tables Nav -->
 
