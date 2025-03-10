@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ExtraFormsController;
 use App\Http\Controllers\MflController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -87,6 +88,12 @@ Route::group(['middleware' => 'auth'], function () {
     // PHQ9 Assessment
     Route::get('phq9',[Phq9Controller::class, 'addAssessment'])->name('phq9.addAssessment');
     Route::post('phq9/store', [Phq9Controller::class, 'storeAssessment'])->name('phq9.storeAssessment');
+
+    Route::get('gad7', [ExtraFormsController::class, 'addGad7'])->name('gad7.addGad7');
+    Route::post('gad7/store', [ExtraFormsController::class, 'storeGad7'])->name('gad7.storeGad7');
+
+    Route::get('ptsd5', [ExtraFormsController::class, 'addPtsd5'])->name('ptsd5.addPtsd5');
+    Route::post('ptsd5/store', [ExtraFormsController::class, 'storePtsd5'])->name('ptsd5.storePtsd5');
 
     //admin routes
     Route::get('/admin/dashboard/charts', [AdminController::class, 'admin'])->name('admin.dashboard.charts');

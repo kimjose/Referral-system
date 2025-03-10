@@ -31,6 +31,16 @@
                         <i class="bi bi-circle"></i><span>PHQ9 Assessment</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('gad7.addGad7') }}">
+                        <i class="bi bi-circle"></i><span>GAD 7 Assessment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('ptsd5.addPtsd5') }}">
+                        <i class="bi bi-circle"></i><span>PTSD-5</span>
+                    </a>
+                </li>
             </ul>
         </li><!-- End Tables Nav -->
 
