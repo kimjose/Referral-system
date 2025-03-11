@@ -47,6 +47,6 @@ class Phq9Controller extends Controller
         ]);
         $validated["user_id"] = Auth::id();
         Phq9Assessment::create($validated);
-        //return redirect()->back()->with('success', 'PHQ9 Form Submitted successfully');
+        return redirect()->back()->with('success', 'PHQ9 Form Submitted successfully');
     }
 }

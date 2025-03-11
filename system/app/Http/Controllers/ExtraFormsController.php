@@ -6,6 +6,7 @@ use App\Models\Gad7;
 use App\Models\Ptsd5;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExtraFormsController extends Controller
 {
@@ -44,6 +45,7 @@ class ExtraFormsController extends Controller
             'irritable' => ['required'],
             'afraid' => ['required']
         ]);
+        $validated["user_id"] = Auth::id();
         Gad7::create($validated);
         return redirect()->back()->with('success', 'GAD7 Form Submitted successfully');
     }

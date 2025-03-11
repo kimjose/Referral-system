@@ -37,7 +37,7 @@
                                         --
                                     </option>
                                     @foreach($patients as $patient)
-                                    <option value="{{$patient}}">{{$patient->idNo}} - {{$patient->first_name.'
+                                    <option  value="{{$patient->id}}" patient="{{$patient}}">{{$patient->idNo}} - {{$patient->first_name.'
                                         '.$patient->last_name}}</option>
                                     @endforeach
                                 </select>
@@ -229,7 +229,7 @@
     $(document).ready(function() {
         $('#selectedPatient').on('change', function() {
 
-            var selectedPatient = $(this).val();//this is a jquery function for getting the selected object
+            var selectedPatient = $(this).find('option:selected').attr('patient');
 
             if (selectedPatient !== '') {
                 var patient = JSON.parse(selectedPatient);
