@@ -5,7 +5,7 @@
         <i class="bi bi-list toggle-sidebar-btn"></i>
         <a href="index.html" class="logo d-flex align-items-center">
             <img src="" alt="">
-            <span class="d-none d-lg-block">Referral System </span>
+            <span class="d-none d-lg-block">Angaza Referral System </span>
         </a>
 
     </div><!-- End Logo -->
