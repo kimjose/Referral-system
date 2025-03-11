@@ -15,7 +15,7 @@
                                 @csrf
                                 <div class="d-flex justify-content-center py-4">
                                     <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                        <span class="d-none d-lg-block">Health Referral System</span>
+                                        <span class="d-none d-lg-block">Angaza Health Referral System</span>
                                     </a>
                                 </div><!-- End Logo -->
 
