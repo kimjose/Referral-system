@@ -66,8 +66,9 @@ class ExtraFormsController extends Controller
             'felt_guilty' => ['required'],
             'nightmares' => ['required']
         ]);
+        $validated["user_id"] = Auth::id();
         Ptsd5::create($validated);
-        return redirect()->back()->with('success', 'PHQ9 Form Submitted successfully');
+        return redirect()->back()->with('success', 'PTSD5 Form Submitted successfully');
     }
 
 }
