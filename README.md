@@ -177,7 +177,7 @@ This referral system is open-source and released under the [MIT License](https:/
 <!-- CONTACT -->
 ## Contact
 
-If you have any questions, suggestions, or feedback, please reach out to the project maintainers at tumhis@tum.ac.ke.
+If you have any questions, suggestions, or feedback, please reach out to the project maintainers at info@appsoft.africa.
 
 Thank you for using the referral system!
 
