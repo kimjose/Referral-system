@@ -240,8 +240,8 @@
                                                 <fieldset class="">
                                                     <div class="p-4">
                                                         <div class=" pb-1">
-                                                            <label for="priorityLevel">Priority Level</label>
-                                                            <select id="priorityLevel" name="priorityLevel" class="form-control">
+                                                            <label for="priority">Priority Level</label>
+                                                            <select id="priority" name="priority" class="form-control">
                                                                 <option value="">--- Select Priority Level ---</option>
                                                                 <option value="stat">Emergency</option>
                                                                 <option value="asap">Critical</option>
@@ -397,7 +397,7 @@
                                                 <div class="p-4">
                                                     <div class="pb-1">
                                                         <h6 class="card-title" style="font-size: 120% !important;">Service Details</h6>
-                                                        <p><strong>Priority Level:</strong> <span id="summary-priorityLevel"></span></p>
+                                                        <p><strong>Priority Level:</strong> <span id="summary-priority"></span></p>
                                                         <p><strong>Service Category:</strong> <span id="summary-serviceCategory"></span></p>
                                                         <p><strong>Service:</strong> <span id="summary-service"></span></p>
                                                         <p><strong>Facility:</strong> <span id="summary-facility"></span></p>

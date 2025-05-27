@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.angaza.docs</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/XAMPP/xamppfiles/htdocs/angaza_referral2/docs/start_docs.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardErrorPath</key>
+    <string>/Applications/XAMPP/xamppfiles/htdocs/angaza_referral2/docs/mkdocs_error.log</string>
+    <key>StandardOutPath</key>
+    <string>/Applications/XAMPP/xamppfiles/htdocs/angaza_referral2/docs/mkdocs_output.log</string>
+    <key>WorkingDirectory</key>
+    <string>/Applications/XAMPP/xamppfiles/htdocs/angaza_referral2/docs</string>
+</dict>
+</plist> 

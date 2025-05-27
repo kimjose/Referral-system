@@ -1,0 +1,66 @@
+site_name: Referral System Documentation
+site_description: Documentation for the Angaza Referral System
+site_author: Angaza Team
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - search.share
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - admonition
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+
+docs_dir: new_docs
+
+nav:
+  - Home: index.md
+  - API Documentation:
+    - Controllers: api/controllers.md
+    - Models: api/models.md
+    - Routes: api/routes.md
+  - Development:
+    - Setup Guide: development/setup.md
+    - Tests: development/tests.md
+    - Migrations: development/migrations.md
+    - Views: development/views.md
+  - Architecture:
+    - System Overview: architecture/system-overview.md
+    - Class Diagram: architecture/class-diagram.md
+    - Sequence Diagram: architecture/sequence-diagram.md
+  - User Guides:
+    - User Manual: guides/user-manual.md
+  - Changelog: changelog.md
+
+plugins:
+  - search
+  - git-revision-date-localized
+  - minify:
+      minify_html: true 

@@ -38,6 +38,13 @@ Route::post('/referral/api-referral', [ReferralTabController::class, 'apiReferra
 //sms sending
 Route::post('/sms/referral_sms', [SmsController::class, 'sendSms']);
 
+// MFL API Routes
+Route::get('/mfl/service_categories', [MflController::class, 'getServiceCategories']);
+Route::get('/mfl/facility_types', [MflController::class, 'getFacilityTypes']);
+Route::get('/mfl/counties', [MflController::class, 'getCounties']);
+Route::get('/mfl/facilities/by_service', [MflController::class, 'getFacilityFromService']);
+Route::get('/mfl/services/by_category', [MflController::class, 'getServiceFromCategory']);
+
 
 
 

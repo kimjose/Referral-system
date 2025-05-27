@@ -1,0 +1,45 @@
+site_name: Angaza Referral System Documentation
+site_description: Documentation for the Angaza Referral System
+site_author: Angaza Team
+repo_url: https://github.com/your-org/angaza-referral
+repo_name: angaza-referral
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - search.share
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Development:
+    - Overview: development/overview.md
+    - Database: development/database.md
+    - API: development/api.md
+    - Testing: development/tests.md
+    - Migrations: development/migrations.md
+  - User Guide:
+    - Getting Started: user-guide/getting-started.md
+    - Features: user-guide/features.md
+    - Troubleshooting: user-guide/troubleshooting.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python: {} 

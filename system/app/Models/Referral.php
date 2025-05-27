@@ -19,14 +19,15 @@ class Referral extends Model
         'reasonReferral',
         'attachments',
         'additionalNotes',
-        'priorityLevel',
+        'priority',
         'serviceCategory',
         'service',
         'distance',
         'serviceNotes',
         'referralId',
         'submitReferral',
-        'referring_facility_id'
+        'referring_facility_id',
+        'fhir_status'
     ];
 
 

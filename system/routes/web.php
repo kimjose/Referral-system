@@ -109,4 +109,12 @@ Route::group(['middleware' => 'auth'], function () {
     //referral-tabs e.g referral/tabs/tab2
     Route::get('referral/tabs/{tab}', [ReferralController::class, 'show'])->name('referral.tabs');
     Route::post('referral/tabs/save/{tab}', [ReferralController::class, 'saveTabData'])->name('referral.tabs.save');
+
+    // FHIR Routes
+    Route::prefix('fhir')->group(function () {
+        Route::get('/ServiceRequest/{id}', [ReferralController::class, 'fhirJson'])->name('fhir.referral.get');
+        Route::post('/ServiceRequest/$validate', [ReferralController::class, 'validateReferral'])->name('fhir.referral.validate');
+        Route::post('/ServiceRequest', [ReferralController::class, 'submitReferral'])->name('fhir.referral.submit');
+        Route::get('/ServiceRequest', [ReferralController::class, 'search'])->name('fhir.referral.search');
+    });
 });

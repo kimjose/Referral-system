@@ -1,15 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colored Sidebar</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS for Sidebar -->
+    <style>
+        /* Main sidebar styles */
+        .sidebar {
+            background-color: #2c3e50; /* Set sidebar background color */
+            padding: 15px;
+            height: 100vh;
+            color: #ecf0f1; /* Text color for the sidebar */
+        }
+
+        /* Sidebar links */
+        .sidebar-nav .nav-item a {
+            color: #ecf0f1; /* Text color */
+            padding: 10px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        .sidebar-nav .nav-item a:hover {
+            background-color: #34495e; /* Hover effect background color */
+            color: #ffffff; /* Text color on hover */
+        }
+
+        /* Active sidebar links */
+        .sidebar-nav .nav-item a.active {
+            background-color: #2980b9; /* Active state background color */
+            color: #ffffff; /* Active text color */
+        }
+
+        /* Collapse arrow color */
+        .sidebar-nav .nav-item .bi-chevron-down {
+            color: #ecf0f1;
+        }
+
+        /* Sidebar collapse content */
+        .nav-content a {
+            padding-left: 30px;
+            color: #bdc3c7;
+        }
+
+        .nav-content a:hover {
+            background-color: #34495e;
+            color: #ffffff;
+        }
+
+        /* Sidebar icons */
+        .sidebar-nav .nav-item a i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.dashboard') }}">
+            <a class="nav-link active" href="{{ route('admin.dashboard') }}">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li><!-- End Dashboard Nav -->
-
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#registration-nav" data-bs-toggle="collapse" href="#">
@@ -42,7 +105,7 @@
                     </a>
                 </li>
             </ul>
-        </li><!-- End Tables Nav -->
+        </li><!-- End Registration Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#verification-nav" data-bs-toggle="collapse" href="#">
@@ -50,18 +113,17 @@
             </a>
             <ul id="verification-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="">
+                    <a href="#">
                         <i class="bi bi-circle"></i><span>Verify Patient</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="#">
                         <i class="bi bi-circle"></i><span>Verify Referral</span>
                     </a>
                 </li>
             </ul>
-        </li><!-- End Tables Nav -->
-
+        </li><!-- End Verification Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#incoming-referals-nav" data-bs-toggle="collapse" href="#">
@@ -84,7 +146,7 @@
                     </a>
                 </li>
             </ul>
-        </li><!-- End Tables Nav -->
+        </li><!-- End Referrals Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#">
@@ -97,8 +159,14 @@
                     </a>
                 </li>
             </ul>
-        </li><!-- End Tables Nav -->
+        </li><!-- End Reports Nav -->
 
     </ul>
 
 </aside><!-- End Sidebar-->
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

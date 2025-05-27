@@ -56,3 +56,19 @@ VITE_PUSHER_HOST="${PUSHER_HOST}"
 VITE_PUSHER_PORT="${PUSHER_PORT}"
 VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
 VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+# MFL Integration
+MFL_API_URL=https://api.mfl.example.com
+MFL_API_KEY=your_mfl_api_key_here
+
+# eCHIS Integration
+ECHIS_API_URL=https://api.echis.example.com
+ECHIS_API_KEY=your_echis_api_key_here
+
+# SHR Integration
+SHR_API_URL=https://api.shr.example.com
+SHR_API_KEY=your_shr_api_key_here
+
+# HIE Integration
+HIE_API_URL=https://api.hie.example.com
+HIE_API_KEY=your_hie_api_key_here

@@ -37,7 +37,7 @@
                                     <td >{{ $loop->iteration }}</td>
 
                                     <td>{{ $referralRequest->clientName }}</td>
-                                    <td >{{ $referralRequest->priorityLevel }}</td>
+                                    <td >{{ $referralRequest->priority }}</td>
                                     <td >{{ $referralRequest->referringOfficer }}</td>
 {{--                                    <td>{{ $referralRequest->service }}</td>--}}
                                     <td >
