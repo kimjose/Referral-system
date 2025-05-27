@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('community_health_units', function (Blueprint $table) {
+        Schema::create('facility_addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('facility_id')->constrained()->onDelete('cascade');
-            $table->string('chu_code')->unique();
-            $table->string("name");
-            $table->unsignedBigInteger("subcounty_id");
-            $table->string('constituency')->nullable();
-            $table->string('ward')->nullable();
-            $table->string('village')->nullable();
+            $table->string('address_type');
+            $table->string('address_line1')->nullable();
+            $table->string('address_line2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->foreign('subcounty_id')->references('id')->on('subcounties')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->unique(['facility_id', 'address_type']);
         });
     }
 
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('community_health_units');
+        Schema::dropIfExists('facility_addresses');
     }
 };

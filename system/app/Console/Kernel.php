@@ -12,7 +12,29 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Sync MFL facilities daily at 1 AM
+        $schedule->command('integrations:sync --type=mfl')
+            ->dailyAt('01:00')
+            ->withoutOverlapping()
+            ->runInBackground();
+
+        // Sync eCHIS referrals every 15 minutes
+        $schedule->command('integrations:sync --type=echis')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
+
+        // Sync SHR health records every 30 minutes
+        $schedule->command('integrations:sync --type=shr')
+            ->everyThirtyMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
+
+        // Sync HIE records every hour
+        $schedule->command('integrations:sync --type=hie')
+            ->hourly()
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**
@@ -20,7 +42,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
