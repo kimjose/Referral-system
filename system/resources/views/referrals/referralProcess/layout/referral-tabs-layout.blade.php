@@ -13,7 +13,10 @@
                     <a class="nav-link {{ $activeTab === 'tab2' ? 'active' : '' }}" href="{{ route('referral.tabs', ['tab' => 'tab2']) }}" role="tab">Step 1: Referral Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link {{ $activeTab === 'tab3' ? 'active' : '' }}" href="{{ route('referral.tabs', ['tab' => 'tab3']) }}" role="tab">Treatment Plan</a>
+                    <a class="nav-link {{ $activeTab === 'tab3' ? 'active' : '' }}" href="{{ route('referral.tabs', ['tab' => 'tab3']) }}" role="tab">Step 2: Facility Selection</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {{ $activeTab === 'tab4' ? 'active' : '' }}" href="{{ route('referral.tabs', ['tab' => 'tab4']) }}" role="tab">Treatment Plan</a>
                 </li>
                 <!-- Add more tabs as needed -->
             </ul>

@@ -80,7 +80,7 @@
                                     <div class="d-flex align-items-center">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-person-heart"></i>
+                                            <i class="fas fa-user-md"></i>
                                         </div>
                                         <div class="ps-3">
                                             <h6 id="physicians-count">{{ $physiciansCount }}</h6>
@@ -261,7 +261,7 @@
                                     <div class="d-flex align-items-center pt-4">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-person-heart"></i>
+                                            <i class="fas fa-user-md"></i>
                                         </div>
                                         <a href="" class="ps-3">
                                             <div class="dashboardItem">

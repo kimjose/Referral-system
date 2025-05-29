@@ -12,9 +12,6 @@
 @section('tab-content')
     <div class="tab-pane {{ $activeTab === 'tab1' ? 'active' : '' }}" id="tab1" role="tabpanel">
         <div class="accordion-item">
-            {{-- <h2 class="accordion-header" id="headingOne">--}}
-                {{-- <h1 class="card-title" style="font-size: 180% !important;">Patient Details</h1>--}}
-                {{-- </h2>--}}
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample">
                 <div class="accordion-body" style="background: #fff;">
@@ -107,7 +104,6 @@
 
                 var url = '{{ route('referral.tabs', ['tab' => 'tab2']) }}';
                 url += '?patientId=' + patient.id;
-                { { --window.location.href = '{{ route('referral.tabs', ['tab' => 'tab2']) }}'; --} }
                 window.location.href = url;
             });
 
