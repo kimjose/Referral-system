@@ -22,7 +22,7 @@
 
         <div class="container">
             <div class="main-body">
-                <form id="phq9" method="post" action="{{ route('gad7.storeGad7') }}">
+                <form id="ptsd5" method="post" action="{{ route('ptsd5.storePtsd5') }}">
                     @method("POST")
                     @csrf
                     <div class="row mb-3">
@@ -38,7 +38,7 @@
                                                 --
                                             </option>
                                             @foreach($patients as $patient)
-                                                <option value="{{$patient}}">{{$patient->idNo}} - {{$patient->first_name . '
+                                                <option value="{{$patient->id}}" patient="{{$patient}}">{{$patient->idNo}} - {{$patient->first_name . '
                                                                                 ' . $patient->last_name}}</option>
                                             @endforeach
                                         </select>
@@ -184,7 +184,7 @@
     $(document).ready(function () {
         $('#selectedPatient').on('change', function () {
 
-            var selectedPatient = $(this).val();//this is a jquery function for getting the selected object
+            let selectedPatient = $(this).find('option:selected').attr('patient');
 
             if (selectedPatient !== '') {
                 var patient = JSON.parse(selectedPatient);

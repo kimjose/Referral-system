@@ -60,14 +60,11 @@ class ExtraFormsController extends Controller
         $validated = $request->validate([
             'patient_id' => ['required'],
             'assessment_date' => ['required'],
-            'hard_not_to_think' => ['required'],
-            'on_guard' => ['required'],
-            'felt_numb' => ['required'],
-            'felt_guilty' => ['required'],
-            'nightmares' => ['required']
+            'experienced_trauma' => ['required'],
         ]);
+        $validated["user_id"] = Auth::id();
         Ptsd5::create($validated);
-        return redirect()->back()->with('success', 'PHQ9 Form Submitted successfully');
+        return redirect()->back()->with('success', 'PTSD5 Form Submitted successfully');
     }
 
 }
