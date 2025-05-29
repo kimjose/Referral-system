@@ -1,204 +1,214 @@
 # Database Migrations
 
 ## Overview
+This documentation covers the database migration system used in the Angaza Referral System. Migrations are used to version control the database schema and make it easy to share and deploy database changes.
 
-This document describes the database migrations used in the Angaza Referral System. Migrations are used to create and modify database tables.
+## Creating Migrations
 
-## Core Migrations
-
-### Users Table
-
-```php
-Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->string('password');
-    $table->string('role');
-    $table->foreignId('facility_id')->constrained();
-    $table->rememberToken();
-    $table->timestamps();
-});
+### Basic Migration
+```bash
+php artisan make:migration create_users_table
 ```
 
-### Facilities Table
-
+### Migration Structure
 ```php
-Schema::create('facilities', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('code')->unique();
-    $table->string('address');
-    $table->string('phone');
-    $table->string('email');
-    $table->timestamps();
-});
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateUsersTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+}
 ```
 
-### Referrals Table
+## Migration Types
 
+### Table Creation
 ```php
 Schema::create('referrals', function (Blueprint $table) {
     $table->id();
-    $table->string('patient_name');
-    $table->string('patient_phone');
-    $table->foreignId('from_facility_id')->constrained('facilities');
-    $table->foreignId('to_facility_id')->constrained('facilities');
-    $table->string('status');
-    $table->text('notes')->nullable();
-    $table->foreignId('created_by')->constrained('users');
+    $table->foreignId('referrer_id')->constrained('users');
+    $table->string('referred_email');
+    $table->enum('status', ['pending', 'approved', 'rejected']);
     $table->timestamps();
 });
 ```
 
-### Referral Logs Table
-
+### Table Modification
 ```php
-Schema::create('referral_logs', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('referral_id')->constrained();
-    $table->string('status');
-    $table->text('notes')->nullable();
-    $table->foreignId('created_by')->constrained('users');
-    $table->timestamps();
+Schema::table('users', function (Blueprint $table) {
+    $table->string('phone')->nullable();
+    $table->index('email');
+});
+```
+
+### Column Modification
+```php
+Schema::table('referrals', function (Blueprint $table) {
+    $table->string('status')->default('pending')->change();
 });
 ```
 
 ## Running Migrations
 
-### Fresh Migration
-
-To run all migrations from scratch:
-
+### Basic Commands
 ```bash
-php artisan migrate:fresh
-```
+# Run all pending migrations
+php artisan migrate
 
-### Rollback
-
-To rollback the last migration:
-
-```bash
+# Rollback last migration
 php artisan migrate:rollback
+
+# Rollback all migrations
+php artisan migrate:reset
+
+# Refresh all migrations
+php artisan migrate:refresh
+
+# Refresh and seed
+php artisan migrate:refresh --seed
 ```
 
-### Status
-
-To check migration status:
-
+### Migration Status
 ```bash
+# Check migration status
 php artisan migrate:status
+
+# List all migrations
+php artisan migrate:list
 ```
 
 ## Migration Best Practices
 
-1. **Naming Conventions**
-   - Use descriptive names
-   - Include timestamp
-   - Follow Laravel naming pattern
+### Naming Conventions
+1. Use descriptive names
+2. Include table name
+3. Use past tense
+4. Follow Laravel conventions
 
-2. **Foreign Keys**
-   - Always add foreign key constraints
-   - Use onDelete and onUpdate where appropriate
-   - Index foreign key columns
+### Version Control
+1. Commit migrations with related code
+2. Never modify existing migrations
+3. Create new migrations for changes
+4. Document complex changes
 
-3. **Data Types**
-   - Use appropriate data types
-   - Consider storage requirements
-   - Plan for future growth
-
-4. **Indexes**
-   - Add indexes for frequently queried columns
-   - Consider composite indexes
-   - Don't over-index
+### Data Integrity
+1. Use foreign key constraints
+2. Set appropriate indexes
+3. Define default values
+4. Handle null values
 
 ## Common Operations
 
 ### Adding Columns
-
 ```php
 Schema::table('users', function (Blueprint $table) {
-    $table->string('phone')->nullable();
+    $table->string('avatar')->nullable();
+    $table->boolean('is_active')->default(true);
 });
 ```
 
 ### Modifying Columns
-
 ```php
-Schema::table('users', function (Blueprint $table) {
-    $table->string('name', 100)->change();
+Schema::table('referrals', function (Blueprint $table) {
+    $table->string('status', 20)->change();
 });
 ```
 
 ### Dropping Columns
-
 ```php
 Schema::table('users', function (Blueprint $table) {
-    $table->dropColumn('phone');
+    $table->dropColumn('old_column');
 });
 ```
 
 ### Adding Indexes
-
 ```php
 Schema::table('referrals', function (Blueprint $table) {
-    $table->index('status');
+    $table->index(['referrer_id', 'status']);
 });
 ```
 
-## Data Seeding
+## Complex Migrations
 
-### Creating Seeders
-
-```bash
-php artisan make:seeder UserSeeder
+### Conditional Migrations
+```php
+if (Schema::hasTable('users')) {
+    Schema::table('users', function (Blueprint $table) {
+        $table->string('new_column');
+    });
+}
 ```
 
-### Running Seeders
+### Data Migration
+```php
+public function up()
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->string('new_column');
+    });
 
-```bash
-php artisan db:seed
-```
-
-### Specific Seeder
-
-```bash
-php artisan db:seed --class=UserSeeder
-```
-
-## Maintenance
-
-### Backup
-
-Before running migrations:
-
-```bash
-php artisan backup:run
-```
-
-### Verification
-
-After migrations:
-
-```bash
-php artisan migrate:verify
+    DB::table('users')->update([
+        'new_column' => DB::raw('old_column')
+    ]);
+}
 ```
 
 ## Troubleshooting
 
 ### Common Issues
+1. Migration conflicts
+2. Data type mismatches
+3. Foreign key constraints
+4. Index issues
 
-1. **Foreign Key Constraints**
-   - Check table order
-   - Verify column types
-   - Ensure data consistency
+### Solutions
+1. Check migration order
+2. Verify data types
+3. Review constraints
+4. Test migrations
 
-2. **Column Type Mismatches**
-   - Verify data types
-   - Check for data loss
-   - Use appropriate conversions
+## Production Considerations
 
-3. **Index Issues**
-   - Check index names
-   - Verify column existence
-   - Consider performance impact 
+### Safe Deployment
+1. Backup database
+2. Test migrations
+3. Schedule maintenance
+4. Monitor execution
+
+### Performance
+1. Batch large migrations
+2. Use appropriate indexes
+3. Optimize queries
+4. Monitor impact
+
+## Migration Maintenance
+
+### Cleaning Up
+1. Remove old migrations
+2. Archive completed migrations
+3. Update documentation
+4. Review dependencies
+
+### Documentation
+1. Document schema changes
+2. Update ERD
+3. Note breaking changes
+4. Track dependencies 
