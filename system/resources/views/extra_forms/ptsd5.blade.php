@@ -226,7 +226,7 @@
 
         $('#experienced_trauma').on('change', function () {
             let selected = $(this).val();
-            let divTrauma = document.querySelector
+            let divTrauma = document.querySelector("#divTrauma")
             if (selected === 'Yes') {
                 divTrauma.classList.remove('d-none')
                 let inputs = divTrauma.querySelectorAll('select')
