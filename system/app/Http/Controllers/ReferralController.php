@@ -22,7 +22,6 @@ class ReferralController extends Controller
     {
         $activeTab = $tab; // Store the active tab to determine which tab should be marked as active
 
-        $diagnosis = Mappings::select('id', 'from concept name')->get();
 //        $patientId = request()->query('patientId');
 //        $patientId2 = request()->input('patientId');
 //
@@ -40,33 +39,41 @@ class ReferralController extends Controller
             $patientDetails = Patient::where('id', $patientId)->first();
 
             return view('referrals.referralProcess.tabs.tab1',
-                compact('activeTab'))->with(['patient' => $patientDetails,
-                'diagnosis' => $diagnosis]);
+                compact('activeTab'))->with(['patient' => $patientDetails]);
 
         } elseif ($tab === 'tab2') {
+        $diagnosis = Mappings::select('id', 'from concept name')->get();
             $serviceCategories = ServiceCategory::all();
             $services = Service::all();
             $facilities = m_f_l_s::all();
 
-            $referralId = request()->input('referralId');
-            if($referralId == null){
+            // $referralId = request()->input('referralId');
+            // if($referralId == null){
+            //     return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
+            // }
+
+            // $referral = Referral::where('id', $referralId)->first();
+            // if ($referral == null){
+            //     $patientDetails = [];
+
+            // }else {
+
+            //     $patientUpi = $referral->clientUPI;
+            //     $patientDetails = Patient::where('upi', $patientUpi)->first();
+            // }
+            
+            $patientId = request()->input('patientId');
+
+            if($patientId == null){
                 return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
             }
 
-            $referral = Referral::where('id', $referralId)->first();
-            if ($referral == null){
-                $patientDetails = [];
-
-            }else {
-
-                $patientUpi = $referral->clientUPI;
-                $patientDetails = Patient::where('upi', $patientUpi)->first();
-            }
+            $patientDetails = Patient::where('id', $patientId)->first();
 
             return view('referrals.referralProcess.tabs.tab2',
                 compact('activeTab'))->with(['patient' => $patientDetails,
             'serviceCategories' => $serviceCategories, 'services' => $services,
-                'referralId' => $referralId, 'facilities' => $facilities]);
+                'diagnosis' => $diagnosis, 'facilities' => $facilities]);
 
         } elseif ($tab === 'tab3') {
             $referralId =request()->input('referralId');

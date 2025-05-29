@@ -7,15 +7,15 @@
 
                 <img src="{{ url('assets/img/angaza.jpeg') }}" alt="">
 
-                    <div class="card mb-3">
+                    <div class="card my-3">
 
                         <div class="card-body">
 
                             <form class="row g-3 needs-validation" method="post" action="{{ route('user.login') }}">
                                 @csrf
                                 <div class="d-flex justify-content-center py-4">
-                                    <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                        <span class="d-none d-lg-block">Angaza Health Referral System</span>
+                                    <a href="#" class="logo d-flex align-items-center w-auto">
+                                        <span class="text-center d-none d-lg-block">Angaza Health Referral System</span>
                                     </a>
                                 </div><!-- End Logo -->
 
@@ -34,7 +34,7 @@
                                     <div class="invalid-feedback">Please enter your password!</div>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-primary w-100" type="submit">Login</button>
+                                    <button class="btn btn-update w-100" type="submit">Login</button>
                                 </div>
                                 <div class="col-12">
                                     <p class="small mb-0">Forgot password? <a href="#">Request password reset</a></p>

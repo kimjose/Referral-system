@@ -1,16 +1,17 @@
 
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header id="header" class="header fixed-top d-flex align-items-center gap-5">
 
-    <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center justify-content-between gap-3">
         <i class="bi bi-list toggle-sidebar-btn"></i>
-        <a href="index.html" class="logo d-flex align-items-center">
-            <img src="" alt="">
-            <span class="d-none d-lg-block">Angaza Referral System </span>
+        <a href="index.html" class="logo d-flex align-items-center gap-2 ml-3">
+            <!-- <img src="" alt=""> -->
+             <img src="{{ url('assets/img/logo.svg') }}" class="fs-4" alt="Angaza Logo">
+            <span class="d-none d-lg-block">Angaza</span>
         </a>
 
     </div><!-- End Logo -->
 
-    <h6 class="card-title" style="font-size: 90% !important;">{{ auth()->user()->userFacility->Code }} | {{ auth()->user()->userFacility->Officialname }} ({{ auth()->user()->userFacility->County }} County)</h6>
+    <h6 class="card-title facility-title" style="font-size: 14px; padding: 0px">{{ auth()->user()->userFacility->Code }} | {{ auth()->user()->userFacility->Officialname }} ({{ auth()->user()->userFacility->County }} County)</h6>
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
 
@@ -24,7 +25,7 @@
 
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number">{{auth()->user()->userFacility->unreadNotifications->count()}}</span>
+                    <span class="badge bg-angaza-primary badge-number">{{auth()->user()->userFacility->unreadNotifications->count()}}</span>
                 </a><!-- End Notification Icon -->
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">

@@ -219,6 +219,7 @@
 
     <script>
         $(document).ready(function () {
+            var patient = {!! json_encode($patient) !!};
             var selectedService = null;
             var selectedFacility = null;
             var category_name = null

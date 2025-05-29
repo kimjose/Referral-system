@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Outer circle -->
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#CC4E27" stroke-width="4"></circle>
+  
+  <!-- Medical cross -->
+  <rect x="50" y="30" width="20" height="60" fill="#CC4E27"></rect>
+  <rect x="30" y="50" width="60" height="20" fill="#CC4E27"></rect>
+  
+  <!-- Forward arrow, cutout style -->
+  <polygon points="70,60 90,50 90,70" fill="#CC4E27"></polygon>
+  <!-- Optional: white cutout to separate cross from arrow -->
+  <polygon points="65,60 85,50 85,70" fill="#FFF"></polygon>
+</svg>

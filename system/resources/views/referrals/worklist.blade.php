@@ -27,72 +27,70 @@
         @endif
 
         <div class="pagetitle">
-            <h1> Referrals </h1>
+            <h1 class="mb-2">Patients List</h1>
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"> Outgoing referrals</li>
-                    <li class="breadcrumb-item active">Worklist</li>
+                    <li class="breadcrumb-item">Worklist</li>
+                    <li class="breadcrumb-item active">All Patients</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
 
         <section class="section dashboard">
-            <div class="row">
-
-                <!-- Left side columns -->
-                <div class="col-lg-12">
-
-                  <div class="table-responsive">
+            <div class="field">
+                <div class="table-responsive">
                     <table class="table table-bordered table-striped datatable" id="patientTable">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>First Name</th>
-                          <th>Last Name</th>
-                          <th>ID Number</th>
-                          <th>Gender</th>
-                          <th>Telephone</th>
-                          <!-- Add more patient fields as needed -->
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!-- Patient records will be dynamically added here -->
-                        @foreach ($patients as $patient)
-                {{--            <tr onclick="window.location.href='{{ route('referral.tabs', ['tab' => "tab1"]) }}'">--}}
-                            <tr onclick="window.location.href='{{ route('referral.tabs', ['tab' => 'tab1']) }}?patientId={{ $patient->id }}'">
-                                <td>{{ $patient->id }}</td>
-                                <td>{{ $patient->first_name }}</td>
-                                <td>{{ $patient->last_name }}</td>
-                                <td>{{ $patient->idNo }}</td>
-                                <td>{{ $patient->gender }}</td>
-                                <td>{{ $patient->telephone }}</td>
-                                <td class="refer-btn" data-patient-id="{{ $patient->id }}">
-                                    <div class="btn-group" role="group">
-                                        <button type="" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Refer
-                                        </button>
-                                    </div>
-                                </td>
-                                <!-- Add more patient fields as needed -->
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>ID Number</th>
+                                <th>Gender</th>
+                                <th>Telephone</th>
+                                <th class="no-sort text-center">Action</th>
                             </tr>
-                        @endforeach
-                      </tbody>
+                        </thead>
+                        <tbody>
+                            <!-- Patient records will be dynamically added here -->
+                            @foreach ($patients as $patient)
+                                {{-- <tr onclick="window.location.href='{{ route('referral.tabs', ['tab' => " tab1"]) }}'">
+                                    --}}
+                                <tr
+                                    onclick="window.location.href='{{ route('referral.tabs', ['tab' => 'tab1']) }}?patientId={{ $patient->id }}'">
+                                    <td>{{ $patient->id }}</td>
+                                    <td>{{ $patient->first_name }}</td>
+                                    <td>{{ $patient->last_name }}</td>
+                                    <td>{{ $patient->idNo }}</td>
+                                    <td>{{ $patient->gender }}</td>
+                                    <td>{{ $patient->telephone }}</td>
+                                    <td class="refer-btn text-center" data-patient-id="{{ $patient->id }}">
+                                        <div class="btn-group" role="group">
+                                            <button type="" class="btn btn-update" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                View Patient
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <!-- Add more patient fields as needed -->
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
-                  </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    {{--    SCRIPT SECTION  --}}
+    {{-- SCRIPT SECTION --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Handle click event
-            $('.refer-btn').on('click', function() {
+            $('.refer-btn').on('click', function () {
                 console.log("clicked")
                 // Get the patient ID from the data attribute
                 var patientId = $(this).data('patient-id');
@@ -101,23 +99,12 @@
 
                 console.log(url)
 
-                 // window.location.href = url;
-                //
-                // Send an AJAX request to fetch the patient data
-                {{--$.ajax({--}}
-                {{--    url: '{{ url('referral/tabs/tab1') }}',--}}
-                {{--    method: 'GET',--}}
-                {{--    data: {--}}
-                {{--        patientId: patientId--}}
-                {{--    },--}}
-                {{--    success: function(response) {--}}
-                {{--        console.log(response);--}}
-                {{--        // window.location.href = '/referral/tabs/tab1'; // Replace with your desired redirect URL--}}
-                {{--    },--}}
-                {{--    error: function(xhr, status, error) {--}}
-                {{--        console.error(error);--}}
-                {{--    }--}}
-                {{--});--}}
+            });
+
+            $('#patientTable').DataTable({
+                columnDefs: [
+                    { targets: 'no-sort', orderable: false }
+                ]
             });
         });
     </script>
