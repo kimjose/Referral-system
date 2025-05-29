@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angaza Referral System Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --bg-color: #ffffff;
+            --sidebar-bg: #f3f4f6;
+            --hover-color: #dbeafe;
+            --search-bg: #ffffff;
+            --search-border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--sidebar-bg);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            padding-left: 2.5rem;
+            border: 1px solid var(--search-border);
+            border-radius: 6px;
+            font-size: 1rem;
+            background: var(--search-bg);
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            border: 1px solid var(--search-border);
+            border-radius: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--search-border);
+            cursor: pointer;
+        }
+
+        .search-result-item:hover {
+            background: var(--hover-color);
+        }
+
+        .search-result-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .search-result-item p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--text-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-list li {
+            margin: 0.5rem 0;
+        }
+
+        .nav-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-list a:hover {
+            background: var(--hover-color);
+            color: var(--primary-color);
+        }
+
+        .quick-links {
+            background: var(--hover-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .quick-links h3 {
+            margin-top: 0;
+        }
+
+        .quick-links ul {
+            list-style: none;
+        }
+
+        .quick-links li {
+            margin: 0.5rem 0;
+        }
+
+        .quick-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .support-section {
+            background: var(--sidebar-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .support-section h3 {
+            margin-top: 0;
+        }
+
+        .support-section ul {
+            list-style: none;
+        }
+
+        .support-section li {
+            margin: 0.5rem 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb i {
+            margin: 0 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Documentation</h2>
+            
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search documentation...">
+                <div class="search-results"></div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Getting Started</h3>
+                <ul class="nav-list">
+                    <li><a href="getting_started.html">Getting Started Guide</a></li>
+                    <li><a href="getting_started.html#requirements">System Requirements</a></li>
+                    <li><a href="getting_started.html#setup">First-Time Setup</a></li>
+                    <li><a href="getting_started.html#navigation">System Navigation</a></li>
+                    <li><a href="getting_started.html#operations">Basic Operations</a></li>
+                    <li><a href="getting_started.html#security">Security Setup</a></li>
+                    <li><a href="getting_started.html#training">Training Resources</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>Features</h3>
+                <ul class="nav-list">
+                    <li><a href="features.html">Features Documentation</a></li>
+                    <li><a href="features.html#core">Core Features</a></li>
+                    <li><a href="features.html#advanced">Advanced Features</a></li>
+                    <li><a href="features.html#admin">Administrative Features</a></li>
+                    <li><a href="features.html#integration">Integration Features</a></li>
+                    <li><a href="features.html#customization">Customization Features</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>Troubleshooting</h3>
+                <ul class="nav-list">
+                    <li><a href="troubleshooting.html">Troubleshooting Guide</a></li>
+                    <li><a href="troubleshooting.html#auth">Authentication Issues</a></li>
+                    <li><a href="troubleshooting.html#access">System Access</a></li>
+                    <li><a href="troubleshooting.html#data">Data Issues</a></li>
+                    <li><a href="troubleshooting.html#performance">Performance Issues</a></li>
+                    <li><a href="troubleshooting.html#integration">Integration Issues</a></li>
+                    <li><a href="troubleshooting.html#mobile">Mobile Issues</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>Technical Docs</h3>
+                <ul class="nav-list">
+                    <li><a href="api.html">API Documentation</a></li>
+                    <li><a href="database_schema.html">Database Schema</a></li>
+                    <li><a href="system_sequence.html">System Sequence</a></li>
+                    <li><a href="migrations.html">Migration Guide</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Documentation</span>
+            </div>
+
+            <h1>Angaza Referral System Documentation</h1>
+            
+            <p>Welcome to the Angaza Referral System documentation. This documentation provides comprehensive information about the system's features, setup, and usage.</p>
+
+            <div class="quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="user_guide.html">User Guide</a> - Complete user manual</li>
+                    <li><a href="api.html">API Reference</a> - API documentation</li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a> - Common issues and solutions</li>
+                    <li><a href="getting_started.html">Getting Started</a> - New user guide</li>
+                    <li><a href="features.html">Features</a> - System features overview</li>
+                </ul>
+            </div>
+
+            <div class="support-section">
+                <h3>Support</h3>
+                <p>For additional support:</p>
+                <ul>
+                    <li>Email: support@angaza-referral.com</li>
+                    <li>Phone: +254 XXX XXX XXX</li>
+                    <li>Live Chat: Available 24/7</li>
+                    <li>Knowledge Base: <a href="index.html">Documentation Home</a></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const searchResults = document.querySelector('.search-results');
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            if (query.length < 2) {
+                searchResults.classList.remove('active');
+                return;
+            }
+
+            // Simulate search results (replace with actual search implementation)
+            const results = [
+                { title: 'Getting Started Guide', description: 'Complete guide for new users', url: 'getting_started.html' },
+                { title: 'System Requirements', description: 'Hardware and software requirements', url: 'getting_started.html#requirements' },
+                { title: 'API Documentation', description: 'API endpoints and usage', url: 'api.html' }
+            ].filter(result => 
+                result.title.toLowerCase().includes(query) || 
+                result.description.toLowerCase().includes(query)
+            );
+
+            if (results.length > 0) {
+                searchResults.innerHTML = results.map(result => `
+                    <div class="search-result-item" onclick="window.location.href='${result.url}'">
+                        <h4>${result.title}</h4>
+                        <p>${result.description}</p>
+                    </div>
+                `).join('');
+                searchResults.classList.add('active');
+            } else {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html> 
