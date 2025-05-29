@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MflController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// MFL API Routes
+Route::prefix('mfl')->group(function () {
+    Route::get('/facilities', [MflController::class, 'getFacilities']);
+    Route::get('/facilities/{id}', [MflController::class, 'getFacility']);
+    Route::get('/community-health-units', [MflController::class, 'getCommunityHealthUnits']);
+    Route::post('/sync', [MflController::class, 'syncFacilities']);
 }); 

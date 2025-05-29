@@ -8,17 +8,32 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Facility extends Model
 {
     protected $fillable = [
+        'mfl_code',
         'name',
-        'code',
-        'address',
-        'phone',
-        'email',
-        'is_active',
+        'type',
+        'status',
+        'county',
+        'sub_county',
+        'ward'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
+
+    public static function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'mfl_code' => 'required|string|max:50|unique:facilities,mfl_code',
+            'type' => 'required|string|max:100',
+            'status' => 'required|string|in:Active,Inactive',
+            'county' => 'required|string|max:100',
+            'sub_county' => 'nullable|string|max:100',
+            'ward' => 'nullable|string|max:100'
+        ];
+    }
 
     public function contacts(): HasMany
     {

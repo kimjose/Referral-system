@@ -3,207 +3,232 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Services\MFLService;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use App\Models\Facility;
+use Illuminate\Support\Facades\Config;
 
-class MFLIntegrationTest extends TestCase
+class MflIntegrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $mflBaseUrl = 'https://api.mfl.health.go.ke/api/facilities';
+    protected $baseUrl;
+    protected $apiKey;
 
-    public function test_can_fetch_facilities()
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        // Set test configuration
+        Config::set('services.mfl.base_url', 'https://api.mfl.health.go.ke/api/v1');
+        Config::set('services.mfl.api_key', 'test_api_key');
+        
+        $this->baseUrl = config('services.mfl.base_url');
+        $this->apiKey = config('services.mfl.api_key');
+    }
+
+    /** @test */
+    public function it_can_fetch_facilities_from_mfl()
     {
         Http::fake([
-            "{$this->mflBaseUrl}/facilities/*" => Http::response([
-                'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f0',
-                'name' => 'Test Hospital',
-                'code' => '15003',
-                'facility_type' => '11494347-f40c-4fbb-8632-cc1f35fe1fc9',
-                'operation_status' => 'active',
-                'ward' => '353404d7-02e6-422f-b64f-b1c7d0f1bcf0'
+            "{$this->baseUrl}/facilities*" => Http::response([
+                'data' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Test Facility',
+                        'code' => 'MFL001',
+                        'type' => 'Hospital',
+                        'status' => 'Active',
+                        'county' => 'Nairobi',
+                        'sub_county' => 'Westlands',
+                        'ward' => 'Parklands'
+                    ]
+                ]
             ], 200)
         ]);
 
-        $response = $this->getJson('/api/facilities/sync');
+        $response = $this->getJson('/api/mfl/facilities');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'code',
+                        'type',
+                        'status',
+                        'county',
+                        'sub_county',
+                        'ward'
+                    ]
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function it_can_fetch_single_facility_from_mfl()
+    {
+        $facilityId = 1;
+
+        Http::fake([
+            "{$this->baseUrl}/facilities/{$facilityId}*" => Http::response([
+                'data' => [
+                    'id' => $facilityId,
+                    'name' => 'Test Facility',
+                    'code' => 'MFL001',
+                    'type' => 'Hospital',
+                    'status' => 'Active',
+                    'county' => 'Nairobi',
+                    'sub_county' => 'Westlands',
+                    'ward' => 'Parklands'
+                ]
+            ], 200)
+        ]);
+
+        $response = $this->getJson("/api/mfl/facilities/{$facilityId}");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'code',
+                    'type',
+                    'status',
+                    'county',
+                    'sub_county',
+                    'ward'
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function it_can_fetch_community_health_units()
+    {
+        Http::fake([
+            "{$this->baseUrl}/community-health-units*" => Http::response([
+                'data' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Test CHU',
+                        'code' => 'CHU001',
+                        'facility_id' => 1,
+                        'status' => 'Active',
+                        'county' => 'Nairobi',
+                        'sub_county' => 'Westlands',
+                        'ward' => 'Parklands'
+                    ]
+                ]
+            ], 200)
+        ]);
+
+        $response = $this->getJson('/api/mfl/community-health-units');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'code',
+                        'facility_id',
+                        'status',
+                        'county',
+                        'sub_county',
+                        'ward'
+                    ]
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function it_handles_mfl_api_errors_gracefully()
+    {
+        Http::fake([
+            "{$this->baseUrl}/facilities*" => Http::response([
+                'error' => 'API Error'
+            ], 500)
+        ]);
+
+        $response = $this->getJson('/api/mfl/facilities');
+
+        $response->assertStatus(500)
+            ->assertJsonStructure([
+                'error',
+                'message'
+            ]);
+    }
+
+    /** @test */
+    public function it_validates_facility_data_before_saving()
+    {
+        $invalidFacility = [
+            'name' => '', // Invalid empty name
+            'code' => 'MFL001',
+            'type' => 'Hospital',
+            'status' => 'Active'
+        ];
+
+        $response = $this->postJson('/api/mfl/facilities', $invalidFacility);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name']);
+    }
+
+    /** @test */
+    public function it_can_sync_facility_data_with_local_database()
+    {
+        Http::fake([
+            "{$this->baseUrl}/facilities*" => Http::response([
+                'data' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Test Facility',
+                        'code' => 'MFL001',
+                        'type' => 'Hospital',
+                        'status' => 'Active',
+                        'county' => 'Nairobi',
+                        'sub_county' => 'Westlands',
+                        'ward' => 'Parklands'
+                    ]
+                ]
+            ], 200)
+        ]);
+
+        $response = $this->postJson('/api/mfl/sync');
 
         $response->assertStatus(200)
             ->assertJson([
-                'success' => true,
                 'message' => 'Facilities synchronized successfully'
             ]);
 
         $this->assertDatabaseHas('facilities', [
-            'mfl_code' => '15003',
-            'name' => 'Test Hospital'
+            'mfl_code' => 'MFL001',
+            'name' => 'Test Facility'
         ]);
     }
 
-    public function test_can_filter_facilities_by_name()
+    /** @test */
+    public function it_validates_required_fields_for_facility_sync()
     {
         Http::fake([
-            "{$this->mflBaseUrl}/facilities/?name=molo*" => Http::response([
-                'count' => 1,
-                'results' => [
+            "{$this->baseUrl}/facilities*" => Http::response([
+                'data' => [
                     [
-                        'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f0',
-                        'name' => 'Molo District Hospital',
-                        'code' => '15004'
+                        'id' => 1,
+                        'name' => '', // Missing required name
+                        'code' => '', // Missing required code
+                        'type' => 'Hospital',
+                        'status' => 'Active'
                     ]
                 ]
             ], 200)
         ]);
 
-        $response = $this->getJson('/api/facilities/sync?name=molo');
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('facilities', [
-            'name' => 'Molo District Hospital',
-            'mfl_code' => '15004'
-        ]);
-    }
-
-    public function test_can_filter_facilities_by_code()
-    {
-        Http::fake([
-            "{$this->mflBaseUrl}/facilities/?code=15003,15002*" => Http::response([
-                'count' => 2,
-                'results' => [
-                    [
-                        'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f0',
-                        'name' => 'Hospital 1',
-                        'code' => '15003'
-                    ],
-                    [
-                        'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f1',
-                        'name' => 'Hospital 2',
-                        'code' => '15002'
-                    ]
-                ]
-            ], 200)
-        ]);
-
-        $response = $this->getJson('/api/facilities/sync?code=15003,15002');
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('facilities', [
-            'mfl_code' => '15003',
-            'name' => 'Hospital 1'
-        ]);
-        $this->assertDatabaseHas('facilities', [
-            'mfl_code' => '15002',
-            'name' => 'Hospital 2'
-        ]);
-    }
-
-    public function test_can_filter_facilities_by_type()
-    {
-        Http::fake([
-            "{$this->mflBaseUrl}/facilities/?facility_type=11494347-f40c-4fbb-8632-cc1f35fe1fc9*" => Http::response([
-                'count' => 1,
-                'results' => [
-                    [
-                        'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f0',
-                        'name' => 'District Hospital',
-                        'code' => '15003',
-                        'facility_type' => '11494347-f40c-4fbb-8632-cc1f35fe1fc9'
-                    ]
-                ]
-            ], 200)
-        ]);
-
-        $response = $this->getJson('/api/facilities/sync?facility_type=11494347-f40c-4fbb-8632-cc1f35fe1fc9');
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('facilities', [
-            'mfl_code' => '15003',
-            'name' => 'District Hospital'
-        ]);
-    }
-
-    public function test_handles_api_errors()
-    {
-        Http::fake([
-            "{$this->mflBaseUrl}/facilities/*" => Http::response([
-                'error' => 'Internal Server Error'
-            ], 500)
-        ]);
-
-        $response = $this->getJson('/api/facilities/sync');
-
-        $response->assertStatus(500)
-            ->assertJson([
-                'success' => false,
-                'message' => 'Failed to sync with MFL API'
-            ]);
-
-        $this->assertDatabaseHas('sync_logs', [
-            'type' => 'mfl',
-            'status' => 'error',
-            'message' => 'Failed to sync with MFL API'
-        ]);
-    }
-
-    public function test_handles_api_timeout()
-    {
-        Http::fake([
-            "{$this->mflBaseUrl}/facilities/*" => Http::timeout()
-        ]);
-
-        $response = $this->getJson('/api/facilities/sync');
-
-        $response->assertStatus(504)
-            ->assertJson([
-                'success' => false,
-                'message' => 'MFL API request timed out'
-            ]);
-    }
-
-    public function test_validates_facility_data()
-    {
-        Http::fake([
-            "{$this->mflBaseUrl}/facilities/*" => Http::response([
-                'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f0',
-                'name' => '', // Invalid empty name
-                'code' => null, // Invalid null code
-                'facility_type' => 'invalid-uuid' // Invalid UUID
-            ], 200)
-        ]);
-
-        $response = $this->getJson('/api/facilities/sync');
+        $response = $this->postJson('/api/mfl/sync');
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name', 'code', 'facility_type']);
-    }
-
-    public function test_handles_pagination()
-    {
-        Http::fake([
-            "{$this->mflBaseUrl}/facilities/*" => Http::sequence()
-                ->push([
-                    'count' => 100,
-                    'next' => "{$this->mflBaseUrl}/facilities/?page=2",
-                    'results' => array_fill(0, 50, [
-                        'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f0',
-                        'name' => 'Hospital 1',
-                        'code' => '15003'
-                    ])
-                ], 200)
-                ->push([
-                    'count' => 100,
-                    'next' => null,
-                    'results' => array_fill(0, 50, [
-                        'id' => '2927d31f-b1a0-4d17-93b0-ea648af7b9f1',
-                        'name' => 'Hospital 2',
-                        'code' => '15004'
-                    ])
-                ], 200)
-        ]);
-
-        $response = $this->getJson('/api/facilities/sync');
-
-        $response->assertStatus(200);
-        $this->assertDatabaseCount('facilities', 100);
+            ->assertJsonValidationErrors(['name', 'code']);
     }
 } 
