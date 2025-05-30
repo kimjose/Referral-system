@@ -69,7 +69,7 @@ Welcome to the Angaza Referral System documentation. This documentation provides
 ## Support
 
 For additional support:
-- Email: support@angaza-referral.com
+- Email: support@appsoft.africa
 - Phone: +254 XXX XXX XXX
 - Live Chat: Available 24/7
 - Knowledge Base: [Documentation Home](README.md)
