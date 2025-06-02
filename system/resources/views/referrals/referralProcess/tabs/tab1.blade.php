@@ -31,8 +31,18 @@
                             <p><strong>Phone:</strong> {{ $patient->telephone }}</p>
 
 
-                            <button id="refer_button" class="btn btn-update">Refer Patient<i
-                                    class="fas fa-arrow-right ms-2"></i></button>
+
+                            <form action="{{route('referral.tabs.save', ['tab' => 'tab1'])}}" method="POST">
+                                @csrf
+                                <input type="text" id="user_id" name="user_id" value="{{ auth()->id() }}" hidden>
+                                <input type="text" id="patient_id" name="patientId" value="{{ $patient->id }}" hidden>
+                                <input type="text" id="patient_name" name="patientName"
+                                    value="{{ $patient->first_name }} {{ $patient->last_name }}" hidden>
+                                <input type="text" id="patient_upi" name="patientUpi" value="{{ $patient->upi }}" hidden>
+
+                                <button type="submit" id="refer_button" class="btn btn-update">Refer Patient<i
+                                        class="fas fa-arrow-right ms-2"></i></button>
+                            </form>
                         </div>
 
                         <div class="col-4 border-end pb-3">
@@ -97,17 +107,49 @@
             var patientUPI = patient.upi;
             console.log(userId);
             console.log(patientName);
+    /*
+                $('#refer_button').on('click', function () {
+                    // Send the data to the controller using AJAX POST request
+                    console.log("refer btn clicked")
 
-            $('#refer_button').on('click', function () {
-                // Send the data to the controller using AJAX POST request
-                console.log("refer btn clicked")
+                    fetch("{{route('referral.tabs.save', ['tab' => 'tab1'])}}",{
+            method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+                patientId: patient.id,
+                patientName: patientName,
+                patientUPI: patientUPI
 
-                var url = '{{ route('referral.tabs', ['tab' => 'tab2']) }}';
-                url += '?patientId=' + patient.id;
-                window.location.href = url;
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // Redirect to the next tab
+                // var url = '{{ route('referral.tabs', ['tab' => 'tab2']) }}';
+                // url += '?patientId=' + patient.id;
+                // window.location.href = url;
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
 
-        });
+                    // var url = '{{ route('referral.tabs', ['tab' => 'tab2']) }}';
+                    // url += '?patientId=' + patient.id;
+                    // window.location.href = url;
+                });
+                */
+
+            });
 
 
 

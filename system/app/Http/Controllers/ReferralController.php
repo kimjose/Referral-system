@@ -104,8 +104,49 @@ class ReferralController extends Controller
         $diagnosis = Mappings::select('id', 'from concept name')->get();
         $serviceCategories = ServiceCategory::all();
 
-        if ($tab === 'tab2') {
+        if ($tab === 'tab1') {
 
+            $patientId = $request->input('patientId');
+            $patientName = $request->input('patientName');
+            $patientUPI = $request->input('patientUPI');
+
+
+            if ($patientId == null) {
+                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
+            }
+            $patientDetails = Patient::where('id', $patientId)->first();
+
+            return redirect()->route(
+                'referral.tabs',
+                ['tab' => 'tab2', 'patientId' => $patientId, 'patientName' => $patientName, 'patientUPI' => $patientUPI, 'diagnosis' => $diagnosis, 'serviceCategories' => $serviceCategories]
+            );
+
+        } elseif ($tab === 'tab2') {
+
+            $patientId = $request->input('patientId');
+
+            if ($patientId == null) {
+                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
+            }
+
+            $patientDetails = Patient::where('id', $patientId)->first();
+
+            return view(
+                'referrals.referralProcess.tabs.tab3',
+                compact('activeTab')
+            )->with([
+                        'patient' => $patientDetails,
+                        'diagnosis' => $diagnosis,
+                        'serviceCategories' => $serviceCategories
+                    ]);
+
+        } elseif ($tab === 'tab3') {
+
+            return view(
+                'referrals.referralProcess.tabs.tab4',
+                compact('activeTab')
+            )->with(['patient' => $patientDetails]);
+        } elseif ($tab === 'tab2') {
             return view(
                 'referrals.referralProcess.tabs.tab3',
                 compact('activeTab')
