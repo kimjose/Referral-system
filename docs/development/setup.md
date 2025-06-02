@@ -1,21 +1,22 @@
 # Development Setup Guide
 
-This guide will help you set up the development environment for the Referral System.
+This guide will help you set up your development environment for the Angaza Referral System.
 
 ## Prerequisites
 
 - PHP 8.1 or higher
-- MySQL 5.7 or higher
+- MySQL 8.0 or higher
 - Composer
-- Node.js and NPM
+- Node.js 18 or higher
+- npm or yarn
 - Git
 
 ## Installation Steps
 
 1. Clone the repository:
    ```bash
-   git clone https://gitlab.com/kim_kim/angaza_referral2.git
-   cd angaza_referral2
+   git clone https://github.com/yourusername/angaza-referral.git
+   cd angaza-referral
    ```
 
 2. Install PHP dependencies:
@@ -23,97 +24,66 @@ This guide will help you set up the development environment for the Referral Sys
    composer install
    ```
 
-3. Create environment file:
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Configure your database in `.env`:
-   ```
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=angaza_referral
-   DB_USERNAME=your_username
-   DB_PASSWORD=your_password
-   ```
-
-5. Generate application key:
-   ```bash
-   php artisan key:generate
-   ```
-
-6. Run database migrations:
-   ```bash
-   php artisan migrate
-   ```
-
-7. Seed the database:
-   ```bash
-   php artisan db:seed
-   ```
-
-8. Install Node.js dependencies:
+3. Install JavaScript dependencies:
    ```bash
    npm install
    ```
 
-9. Compile assets:
+4. Configure environment:
    ```bash
-   npm run dev
+   cp .env.example .env
+   php artisan key:generate
    ```
 
-10. Start the development server:
-    ```bash
-    php artisan serve
-    ```
+5. Configure database:
+   - Create a MySQL database
+   - Update `.env` with database credentials
+   - Run migrations:
+     ```bash
+     php artisan migrate
+     ```
 
-## Development Workflow
-
-1. Create a new branch for your feature:
+6. Start development server:
    ```bash
-   git checkout -b feature/your-feature-name
+   php artisan serve
    ```
 
-2. Make your changes and commit them:
-   ```bash
-   git add .
-   git commit -m "Description of your changes"
-   ```
+## Development Tools
 
-3. Push your changes:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+### Code Style
+- Follow PSR-12 coding standards
+- Use PHP_CodeSniffer for linting
+- Run tests before committing
 
-4. Create a merge request on GitLab
+### Testing
+- PHPUnit for unit tests
+- Laravel Dusk for browser tests
+- Jest for JavaScript tests
 
-## Testing
-
-Run the test suite:
-```bash
-php artisan test
-```
+### Documentation
+- PHPDoc for PHP code
+- JSDoc for JavaScript code
+- Markdown for general documentation
 
 ## Common Issues
 
-### Permission Issues
-If you encounter permission issues:
-```bash
-chmod -R 775 storage bootstrap/cache
-```
+### Database Connection
+- Verify MySQL is running
+- Check database credentials
+- Ensure database exists
 
 ### Composer Issues
-If you have issues with Composer:
-```bash
-composer clear-cache
-composer update
-```
+- Clear composer cache
+- Update composer
+- Check PHP version
 
-### NPM Issues
-If you have issues with NPM:
-```bash
-rm -rf node_modules
-npm cache clean --force
-npm install
-``` 
+### Node.js Issues
+- Clear npm cache
+- Delete node_modules
+- Reinstall dependencies
+
+## Next Steps
+
+- Read the [Contributing Guidelines](CONTRIBUTING.md)
+- Review the [Architecture Overview](../architecture/system-overview.md)
+- Check the [API Documentation](../api/overview.md) 

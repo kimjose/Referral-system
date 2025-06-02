@@ -54,31 +54,76 @@ plugins:
   - minify:
       minify_html: true
 
-docs_dir: new_docs
+docs_dir: docs
 
 nav:
   - Home: index.md
-  - User Documentation:
-    - Getting Started: guides/getting-started.md
-    - User Guide: guides/user-manual.md
-    - Features: guides/features.md
-    - Troubleshooting: guides/troubleshooting.md
-  - Technical Documentation:
-    - Architecture:
+  - User Guide:
+      - Getting Started: user-guide/getting-started.md
+      - Features: user-guide/features.md
+      - Troubleshooting: user-guide/troubleshooting.md
+      - Functional: user-guide/functional.md
+      - User Manual: user-guide/user-manual.md
+  - Development:
+      - Overview: development/overview.md
+      - Contributing: development/CONTRIBUTING.md
+      - Setup: development/setup.md
+      - Database: development/database.md
+      - Migrations: development/migrations.md
+      - Views: development/views.md
+      - Testing: development/testing.md
+      - Tests: development/tests.md
+      - API: development/api.md
+      - Architecture: development/architecture.md
+  - Architecture:
       - System Overview: architecture/system-overview.md
+      - System Components: architecture/system-components.md
       - System Diagrams: architecture/system-diagrams.md
       - Class Diagram: architecture/class-diagram.md
       - Sequence Diagram: architecture/sequence-diagram.md
-    - Development:
-      - Setup: development/setup.md
-      - Database: development/database.md
-      - Views: development/views.md
-      - Testing: development/testing.md
-      - Migrations: development/migrations.md
-      - Contributing: development/contributing.md
-    - Standards:
-      - Health Data Standards: standards/health-standards.md
-    - API:
+      - System Sequence: architecture/system_sequence.md
+      - Security: architecture/security.md
+      - Deployment: architecture/deployment.md
+      - Integration: architecture/integration.md
+      - Performance: architecture/performance.md
+      - Index: architecture/index.md
+  - API Documentation:
+      - Overview: api/overview.md
       - API Documentation: api/api-documentation.md
-  - Project:
-    - Changelog: changelog.md 
+      - Controllers: api/controllers.md
+      - Endpoints: api/endpoints.md
+      - Models: api/models.md
+      - Routes: api/routes.md
+  - Database:
+      - Schema: database/schema.md
+      - Migrations: database/migrations.md
+  - Standards:
+      - Accessibility: standards/accessibility-standards.md
+      - API: standards/api-standards.md
+      - Backup: standards/backup-standards.md
+      - Change Management: standards/change-management-standards.md
+      - Coding: standards/coding-standards.md
+      - Compliance: standards/compliance-standards.md
+      - Configuration Management: standards/configuration-management-standards.md
+      - Database: standards/database-standards.md
+      - Deployment: standards/deployment-standards.md
+      - Disaster Recovery: standards/disaster-recovery-standards.md
+      - Documentation: standards/documentation-standards.md
+      - FHIR Compliance: standards/fhir-compliance.md
+      - Health: standards/health-standards.md
+      - HL7 Compliance: standards/hl7-compliance.md
+      - ICD11 Compliance: standards/icd11-compliance.md
+      - Incident Response: standards/incident-response-standards.md
+      - Internationalization: standards/internationalization-standards.md
+      - Monitoring: standards/monitoring-standards.md
+      - Performance: standards/performance-standards.md
+      - Privacy: standards/privacy-standards.md
+      - Quality Assurance: standards/quality-assurance-standards.md
+      - Release Management: standards/release-management-standards.md
+      - Risk Management: standards/risk-management-standards.md
+      - Security: standards/security-standards.md
+      - Testing: standards/testing-standards.md
+      - User Experience: standards/user-experience-standards.md
+      - User Interface: standards/user-interface-standards.md
+      - Version Control: standards/version-control-standards.md
+  - Changelog: changelog.md 

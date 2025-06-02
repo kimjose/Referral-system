@@ -1,104 +1,170 @@
-# System Architecture Overview
+# System Overview
 
-## Introduction
+The Angaza Referral System is a comprehensive healthcare referral management platform designed to streamline and improve the patient referral process between healthcare facilities.
 
-The Referral System is designed to facilitate the management of medical referrals between healthcare facilities. This document provides an overview of the system's architecture and key components.
+## System Architecture
 
-## System Components
+### High-Level Architecture
 
-### Frontend
-- Laravel Blade templates for views
-- Vanilla JavaScript for client-side interactions
-- Bootstrap for styling and responsive design
+```mermaid
+graph TD
+    A[Web Client] --> B[API Gateway]
+    B --> C[Authentication Service]
+    B --> D[Referral Service]
+    B --> E[Facility Service]
+    B --> F[User Service]
+    D --> G[(Database)]
+    E --> G
+    F --> G
+    C --> G
+```
 
-### Backend
-- Laravel PHP framework
-- MySQL database
-- RESTful API architecture
+### Key Components
 
-### Authentication
-- JWT (JSON Web Tokens) for API authentication
-- Session-based authentication for web interface
+1. **Web Client**
+   - React.js-based single-page application
+   - Material-UI components for consistent user interface
+   - Responsive design for desktop and mobile access
 
-## Database Schema
+2. **API Gateway**
+   - Node.js/Express.js backend
+   - RESTful API endpoints
+   - Request validation and sanitization
+   - Rate limiting and security measures
 
-### Core Tables
-- users
-- facilities
-- referrals
-- patients
-- roles
-- permissions
+3. **Core Services**
+   - Authentication Service: User authentication and authorization
+   - Referral Service: Manages patient referrals and their lifecycle
+   - Facility Service: Handles healthcare facility management
+   - User Service: Manages user accounts and permissions
 
-### Relationships
-- Users belong to facilities
-- Referrals connect referring and receiving facilities
-- Patients are associated with referrals
-- Roles and permissions control access
+4. **Database**
+   - PostgreSQL relational database
+   - Optimized schema for healthcare data
+   - Data encryption at rest
+   - Regular backups and disaster recovery
 
-## API Structure
+## Key Features
 
-### Authentication
-- Login/Logout endpoints
-- Token management
-- Password reset functionality
+### 1. Referral Management
+- Create and track patient referrals
+- Real-time status updates
+- Automated notifications
+- Referral history and audit trail
 
-### Referral Management
-- CRUD operations for referrals
-- Status tracking
-- Filtering and search capabilities
+### 2. Facility Management
+- Facility registration and verification
+- Service catalog management
+- Capacity and availability tracking
+- Inter-facility communication
 
-### Facility Management
-- Facility registration
-- Facility profile management
-- Facility search and filtering
-
-## Security Measures
-
-### Authentication
-- Password hashing
-- Token-based authentication
-- Session management
-
-### Authorization
+### 3. User Management
 - Role-based access control
-- Permission-based actions
-- Facility-level restrictions
+- Multi-level user permissions
+- User activity logging
+- Secure authentication
 
-### Data Protection
-- Input validation
-- SQL injection prevention
-- XSS protection
+### 4. Reporting and Analytics
+- Referral statistics and trends
+- Facility performance metrics
+- User activity reports
+- Custom report generation
 
-## Deployment Architecture
+## Security Features
 
-### Development
-- Local development environment
-- Version control with Git
-- CI/CD pipeline
+1. **Authentication**
+   - JWT-based authentication
+   - Password hashing with bcrypt
+   - Session management
+   - Two-factor authentication support
 
-### Production
-- Web server (Apache/Nginx)
-- Database server
-- File storage
-- Backup systems
+2. **Authorization**
+   - Role-based access control (RBAC)
+   - Permission-based access control
+   - API endpoint protection
+   - Resource-level security
 
-## Monitoring and Logging
+3. **Data Protection**
+   - Data encryption in transit (HTTPS)
+   - Data encryption at rest
+   - Regular security audits
+   - Compliance with healthcare data standards
 
-### System Monitoring
-- Server health checks
-- Performance monitoring
-- Error tracking
+## Integration Capabilities
 
-### Logging
-- Application logs
-- Access logs
-- Error logs
-- Audit trails 
-## Manual Start
-./docs/start_docs.sh
+1. **External Systems**
+   - HL7 FHIR integration
+   - Electronic Health Records (EHR) systems
+   - Hospital Information Systems (HIS)
+   - Laboratory Information Systems (LIS)
 
-## 1. Create a Launch Agent plist file
- ## use com.angaza.docs.plist
-## 2. Load the Launch Agent:
- ## launchctl load ~/Library/LaunchAgents/com.angaza.docs.plist
+2. **Communication Channels**
+   - Email notifications
+   - SMS alerts
+   - Push notifications
+   - Webhook support
+
+## Performance and Scalability
+
+1. **Performance Optimization**
+   - Database query optimization
+   - Caching mechanisms
+   - Load balancing
+   - CDN integration
+
+2. **Scalability Features**
+   - Horizontal scaling support
+   - Microservices architecture
+   - Containerization with Docker
+   - Kubernetes orchestration
+
+## Monitoring and Maintenance
+
+1. **System Monitoring**
+   - Real-time performance monitoring
+   - Error tracking and logging
+   - Resource utilization metrics
+   - Alert system
+
+2. **Maintenance Procedures**
+   - Automated backups
+   - Database maintenance
+   - System updates
+   - Disaster recovery
+
+## Compliance and Standards
+
+1. **Healthcare Standards**
+   - HL7 compliance
+   - FHIR implementation
+   - ICD-11 coding support
+   - HIPAA compliance
+
+2. **Data Standards**
+   - Standardized data formats
+   - Data validation rules
+   - Data quality checks
+   - Audit trail requirements
+
+## Future Enhancements
+
+1. **Planned Features**
+   - AI-powered referral recommendations
+   - Advanced analytics dashboard
+   - Mobile application
+   - Telemedicine integration
+
+2. **Technical Roadmap**
+   - Microservices expansion
+   - Cloud-native architecture
+   - Enhanced security features
+   - Performance optimizations
+
+## Related Documentation
+
+- [Class Diagram](class-diagram.md)
+- [Sequence Diagrams](sequence-diagram.md)
+- [System Components](system-components.md)
+- [Security Architecture](security.md)
+- [Integration Guide](integration.md)
+- [Performance Guidelines](performance.md) 

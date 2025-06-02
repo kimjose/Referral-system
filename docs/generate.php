@@ -28,6 +28,7 @@ class DocumentationGenerator {
         $this->generateDiagrams();
         $this->generateIndex();
         $this->generateChangelog();
+        $this->processImages();
     }
 
     private function scanControllers() {
@@ -321,6 +322,107 @@ class DocumentationGenerator {
         $content .= "- [Changelog](changelog.md)\n";
 
         file_put_contents($this->outputDir . '/index.md', $content);
+    }
+
+    private function processImages() {
+        $imageDir = $this->outputDir . '/images';
+        if (!is_dir($imageDir)) {
+            mkdir($imageDir, 0755, true);
+        }
+
+        // Process all markdown files in docs/ and subdirectories
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(__DIR__, RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+            if (pathinfo($file, PATHINFO_EXTENSION) !== 'md') continue;
+            $content = file_get_contents($file);
+            echo "Processing markdown: $file\n";
+            // Find all image references
+            preg_match_all('/!\[(.*?)\]\((.*?)\)/', $content, $matches, PREG_SET_ORDER);
+            if (count($matches) === 0) {
+                echo "  No images found in $file\n";
+            }
+            foreach ($matches as $match) {
+                $altText = $match[1];
+                $imageUrl = $match[2];
+                echo "  Found image: $imageUrl\n";
+                // Handle GitHub camo URLs
+                if (strpos($imageUrl, 'camo.githubusercontent.com') !== false) {
+                    $imageUrl = $this->resolveCamoUrl($imageUrl);
+                    echo "    Decoded camo URL to: $imageUrl\n";
+                }
+                // Download and save image locally
+                $imageName = basename(parse_url($imageUrl, PHP_URL_PATH));
+                $localPath = $imageDir . '/' . $imageName;
+                if ($this->downloadImage($imageUrl, $localPath)) {
+                    echo "    Downloaded to: $localPath\n";
+                    // Update markdown to use local path
+                    $relativePath = 'images/' . $imageName;
+                    $content = str_replace($match[0], "![$altText]($relativePath)", $content);
+                } else {
+                    echo "    Failed to download: $imageUrl\n";
+                }
+            }
+            file_put_contents($file, $content);
+        }
+    }
+
+    private function resolveCamoUrl($camoUrl) {
+        // GitHub camo URLs encode the original URL in hex after the last slash
+        $parts = explode('/', $camoUrl);
+        $hex = end($parts);
+        // If the hex string is valid, decode it
+        if (preg_match('/^[0-9a-fA-F]+$/', $hex)) {
+            $originalUrl = hex2bin($hex);
+            if (filter_var($originalUrl, FILTER_VALIDATE_URL)) {
+                return $originalUrl;
+            }
+        }
+        // Fallback to the camo URL if decoding fails
+        return $camoUrl;
+    }
+
+    private function downloadImage($url, $path) {
+        $ch = curl_init($url);
+        $fp = fopen($path, 'wb');
+        
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+        
+        $success = curl_exec($ch);
+        
+        if (!$success) {
+            error_log("Failed to download image from {$url}: " . curl_error($ch));
+        }
+        
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpCode !== 200) {
+            error_log("HTTP error {$httpCode} when downloading image from {$url}");
+            $success = false;
+        }
+        
+        curl_close($ch);
+        fclose($fp);
+        
+        // Allow SVGs: skip getimagesize for .svg files
+        if (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'svg') {
+            return $success && filesize($path) > 0;
+        }
+        // Verify the downloaded file is actually an image (for non-SVG)
+        if ($success && filesize($path) > 0) {
+            $imageInfo = getimagesize($path);
+            if ($imageInfo === false) {
+                error_log("Downloaded file from {$url} is not a valid image");
+                unlink($path); // Delete invalid image
+                return false;
+            }
+        }
+        
+        return $success;
     }
 }
 

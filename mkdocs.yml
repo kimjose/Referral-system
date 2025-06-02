@@ -12,34 +12,79 @@ theme:
     - navigation.expand
     - search.highlight
     - search.share
+    - search.suggest
 
 nav:
-  - Home: index.md
-  - Architecture: architecture.md
-  - Development:
-    - Overview: development/overview.md
-    - Database: development/database.md
-    - API: development/api.md
-    - Testing: development/tests.md
-    - Migrations: development/migrations.md
+  - Home: new_docs/index.md
   - User Guide:
-    - Getting Started: user-guide/getting-started.md
-    - Features: user-guide/features.md
-    - Troubleshooting: user-guide/troubleshooting.md
+      - Getting Started: new_docs/guides/getting-started.md
+      - Features: new_docs/guides/features.md
+      - Troubleshooting: new_docs/guides/troubleshooting.md
+      - User Manual: new_docs/guides/user-manual.md
+  - Development:
+      - Overview: development/overview.md
+      - Contributing: development/CONTRIBUTING.md
+      - Setup: new_docs/development/setup.md
+      - Database: new_docs/development/database.md
+      - Migrations: new_docs/development/migrations.md
+      - Views: new_docs/development/views.md
+      - Testing: new_docs/development/testing.md
+      - Tests: new_docs/development/tests.md
+  - Architecture:
+      - System Overview: new_docs/architecture/system-overview.md
+      - System Diagrams: new_docs/architecture/system-diagrams.md
+      - Class Diagram: new_docs/architecture/class-diagram.md
+      - Sequence Diagram: new_docs/architecture/sequence-diagram.md
+  - API Documentation:
+      - API Overview: new_docs/api/api-documentation.md
+      - Controllers: new_docs/api/controllers.md
+      - Models: new_docs/api/models.md
+      - Routes: new_docs/api/routes.md
+  - Standards:
+      - Health Standards: new_docs/standards/health-standards.md
+  - Changelog: new_docs/changelog.md
 
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.tabbed
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist
+  - pymdownx.snippets
+  - pymdownx.arithmatex
   - admonition
   - footnotes
+  - meta
   - toc:
       permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
 
 plugins:
   - search
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python: {} 
+  - git-revision-date-localized
+  - minify:
+      minify_html: true
+  - mermaid2 

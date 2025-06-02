@@ -1,3 +1,23 @@
-# Testing
+# Test Documentation
 
-This page will describe the testing strategy and test cases for the Angaza Referral System. 
+## FhirFormatTest
+
+## IntegrationCommandTest
+
+## MFLIntegrationTest
+
+## ScheduledTasksTest
+
+## CreatesApplication
+
+Creates the application.
+
+### Methods
+
+#### createApplication
+Creates the application.
+
+## FhirFormatTest
+
+## TestCase
+

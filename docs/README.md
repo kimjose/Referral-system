@@ -31,14 +31,14 @@ Welcome to the Angaza Referral System documentation. This documentation provides
   - Mobile Issues
 
 ### API Documentation
-- [API Documentation](api.md) - API endpoints and usage
+- [API Documentation](api/overview.md) - API endpoints and usage
   - Authentication
   - Endpoints
   - Request/Response Formats
   - Error Handling
 
 ### Database Schema
-- [Database Schema](database_schema.md) - Database structure and relationships
+- [Database Schema](database/schema.md) - Database structure and relationships
   - Tables
   - Relationships
   - Indexes
@@ -52,7 +52,7 @@ Welcome to the Angaza Referral System documentation. This documentation provides
   - Security Measures
 
 ### Migrations
-- [Migration Guide](migrations.md) - Database migration documentation
+- [Migration Guide](database/migrations.md) - Database migration documentation
   - Migration Files
   - Running Migrations
   - Seeding Data
