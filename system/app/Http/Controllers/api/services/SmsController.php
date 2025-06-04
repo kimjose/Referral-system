@@ -14,7 +14,7 @@ class SmsController extends Controller
     private $recipients = "+254711XXXYYY,+254733YYYZZZ";
 
     // Set your message
-    private $message = "I'm a lumberjack and its ok, I sleep all night and I work all day";
+    private $message = "I'm a kimkim and its ok, I sleep all night and I work all day";
 
     // Set your shortCode or senderId
     private $from = "myShortCode or mySenderId";

@@ -86,7 +86,7 @@ class ReferralTabController extends Controller
         $officialName = $referringFacility->Officialname;
         $this->smsService  = new SmsService();
         $message = "You have a new referral request from ".$officialName;
-        $recipients = "+254729395605, +254708392326";
+        $recipients = "+254725377609, +254735377609";
 
         $result = $this->smsService->sendSms(2, $recipients, $message);
 
