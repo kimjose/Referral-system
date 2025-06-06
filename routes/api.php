@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MflController;
+use App\Http\Controllers\ECHISWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,8 @@ Route::prefix('mfl')->group(function () {
     Route::get('/facilities/{id}', [MflController::class, 'getFacility']);
     Route::get('/community-health-units', [MflController::class, 'getCommunityHealthUnits']);
     Route::post('/sync', [MflController::class, 'syncFacilities']);
-}); 
+});
+
+// eCHIS Webhook Route
+Route::post('webhooks/echis', [ECHISWebhookController::class, 'handle'])
+    ->name('webhooks.echis'); 
