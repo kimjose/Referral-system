@@ -15,34 +15,34 @@ theme:
     - search.suggest
 
 nav:
-  - Home: new_docs/index.md
+  - Home: index.md
   - User Guide:
-      - Getting Started: new_docs/guides/getting-started.md
-      - Features: new_docs/guides/features.md
-      - Troubleshooting: new_docs/guides/troubleshooting.md
-      - User Manual: new_docs/guides/user-manual.md
+      - Getting Started: user-guide/getting-started.md
+      - User Manual: user-guide/user-manual.md
+      - Features: user-guide/features.md
+      - Troubleshooting: user-guide/troubleshooting.md
   - Development:
-      - Overview: development/overview.md
-      - Contributing: development/CONTRIBUTING.md
-      - Setup: new_docs/development/setup.md
-      - Database: new_docs/development/database.md
-      - Migrations: new_docs/development/migrations.md
-      - Views: new_docs/development/views.md
-      - Testing: new_docs/development/testing.md
-      - Tests: new_docs/development/tests.md
+      - Setup Guide: development/setup.md
+      - API Documentation: api/api-documentation.md
+      - Database Schema: database/schema.md
+      - Migrations: database/migrations.md
+      - Views: development/views.md
   - Architecture:
-      - System Overview: new_docs/architecture/system-overview.md
-      - System Diagrams: new_docs/architecture/system-diagrams.md
-      - Class Diagram: new_docs/architecture/class-diagram.md
-      - Sequence Diagram: new_docs/architecture/sequence-diagram.md
-  - API Documentation:
-      - API Overview: new_docs/api/api-documentation.md
-      - Controllers: new_docs/api/controllers.md
-      - Models: new_docs/api/models.md
-      - Routes: new_docs/api/routes.md
+      - System Overview: architecture/system-overview.md
+      - System Components: architecture/system-components.md
+      - System Diagrams: architecture/system-diagrams.md
+      - Class Diagram: architecture/class-diagram.md
+      - Sequence Diagram: architecture/sequence-diagram.md
+  - API Reference:
+      - API Overview: api/overview.md
+      - Controllers: api/controllers.md
+      - Models: api/models.md
+      - Routes: api/routes.md
   - Standards:
-      - Health Standards: new_docs/standards/health-standards.md
-  - Changelog: new_docs/changelog.md
+      - Health Standards: standards/health-standards.md
+      - HL7 Compliance: standards/hl7-compliance.md
+      - ICD11 Compliance: standards/icd11-compliance.md
+  - Changelog: changelog.md
 
 markdown_extensions:
   - pymdownx.highlight

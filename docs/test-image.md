@@ -1,1 +1,1 @@
-![Test Image](images/php-logo.svg) 
+![Logo](images/logo.png)
