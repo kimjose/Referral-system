@@ -130,22 +130,52 @@ class ReferralController extends Controller
             }
 
             $patientDetails = Patient::where('id', $patientId)->first();
+            $diagnosis = $request->input('diagnosis');
+            $historyInvestigation = $request->input('historyInvestigation');
+            $reasonReferral = $request->input('reasonReferral');
+            $priorityLevel = $request->input('priorityLevel');
+            $additionalNotes = $request->input('additionalNotes');
 
+            $referral = new Referral();
+            $referral->clientName = $patientDetails->name;
+            $referral->clientUPI = $patientDetails->upi;
+            $referral->referringOfficer = Auth::user()->name;
+            $referral->referring_facility_id = Auth::user()->facility_id;
+            $referral->historyInvestigation = $historyInvestigation;
+            $referral->diagnosis = $diagnosis;
+            $referral->reasonReferral = $reasonReferral;
+            $referral->priorityLevel = $priorityLevel;
+            $referral->additionalNotes = $additionalNotes;
+            $referral->save();
             return view(
                 'referrals.referralProcess.tabs.tab3',
                 compact('activeTab')
             )->with([
                         'patient' => $patientDetails,
-                        'diagnosis' => $diagnosis,
-                        'serviceCategories' => $serviceCategories
+                        "referral" => $referral,
+                        "activeTab" => "tab3",
                     ]);
 
         } elseif ($tab === 'tab3') {
-
+            $patientId = $request->input('patientId');
+            if ($patientId == null) {
+                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
+            }
+            $patientDetails = Patient::where('id', $patientId)->first();
+            $referralId = $request->input('referralId');
+            if ($referralId == null) {
+                return redirect()->route('referrals.worklist')->with('error', 'Referral details not saved');
+            }
+            $referral = Referral::where('id', $referralId)->first();
+            if ($referral == null) {
+                return redirect()->route('referrals.worklist')->with('error', 'Referral not found');
+            }
             return view(
-                'referrals.referralProcess.tabs.tab4',
-                compact('activeTab')
-            )->with(['patient' => $patientDetails]);
+                'referrals.referralProcess.tabs.tab4'
+            )->with(['patient' => $patientDetails, 
+                        'referral' => $referral,
+                        'activeTab' => 'tab4'
+                    ]);
         } elseif ($tab === 'tab2') {
             return view(
                 'referrals.referralProcess.tabs.tab3',
