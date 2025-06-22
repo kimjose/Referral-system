@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class MFLService
 {
@@ -15,7 +16,16 @@ class MFLService
     {
         $this->baseUrl = env('MFL_API_URL', 'https://api.kmhfl.health.go.ke/api');
         $this->apiKey = env('MFL_API_KEY');
-        $this->token = $this->getToken();
+        
+        // Only try to get token if not in console command or migration
+        if (!app()->runningInConsole() || !app()->runningUnitTests()) {
+            try {
+                $this->token = $this->getToken();
+            } catch (\Exception $e) {
+                Log::warning('MFL token not available: ' . $e->getMessage());
+                $this->token = null;
+            }
+        }
     }
 
     /**
@@ -24,15 +34,20 @@ class MFLService
     protected function getToken()
     {
         return Cache::remember('mfl_token', 3600, function () {
-            $response = Http::post($this->baseUrl . '/auth/token/', [
-                'username' => env('MFL_USERNAME'),
-                'password' => env('MFL_PASSWORD')
-            ]);
+            try {
+                $response = Http::timeout(10)->post($this->baseUrl . '/auth/token/', [
+                    'username' => env('MFL_USERNAME'),
+                    'password' => env('MFL_PASSWORD')
+                ]);
 
-            if ($response->successful()) {
-                return $response->json()['token'];
+                if ($response->successful()) {
+                    return $response->json()['token'];
+                }
+                throw new \Exception('Failed to get MFL token: ' . $response->body());
+            } catch (\Exception $e) {
+                Log::error('MFL token request failed: ' . $e->getMessage());
+                throw $e;
             }
-            throw new \Exception('Failed to get MFL token');
         });
     }
 
@@ -41,6 +56,10 @@ class MFLService
      */
     public function getFacilitiesByService($serviceId, $ownerType = null, $county = null)
     {
+        if (!$this->token) {
+            throw new \Exception('MFL token not available');
+        }
+
         $params = [
             'format' => 'json',
             'service' => $serviceId
@@ -70,6 +89,10 @@ class MFLService
      */
     public function getFacilityDetails($facilityId)
     {
+        if (!$this->token) {
+            throw new \Exception('MFL token not available');
+        }
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
         ])->get($this->baseUrl . '/facilities/facilities', [
@@ -89,6 +112,10 @@ class MFLService
      */
     public function getServiceCategories()
     {
+        if (!$this->token) {
+            throw new \Exception('MFL token not available');
+        }
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
         ])->get($this->baseUrl . '/service_catalog/categories', [
@@ -107,6 +134,10 @@ class MFLService
      */
     public function getServicesByCategory($categoryId)
     {
+        if (!$this->token) {
+            throw new \Exception('MFL token not available');
+        }
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
         ])->get($this->baseUrl . '/service_catalog/services', [
@@ -126,6 +157,10 @@ class MFLService
      */
     public function getCounties()
     {
+        if (!$this->token) {
+            throw new \Exception('MFL token not available');
+        }
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
         ])->get($this->baseUrl . '/common/counties', [
@@ -144,6 +179,10 @@ class MFLService
      */
     public function getFacilityTypes()
     {
+        if (!$this->token) {
+            throw new \Exception('MFL token not available');
+        }
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
         ])->get($this->baseUrl . '/facilities/facility_types', [
@@ -155,5 +194,15 @@ class MFLService
         }
 
         throw new \Exception('Failed to get facility types: ' . $response->body());
+    }
+
+    /**
+     * Sync facilities (placeholder method)
+     */
+    public function syncFacilities()
+    {
+        // This is a placeholder method that can be implemented later
+        Log::info('MFL facilities sync called');
+        return true;
     }
 } 

@@ -266,8 +266,16 @@ class ReferralController extends Controller
 
 
     public function outgoing(){
-        $loggedInuserFacility = Auth::user()->userFacility->Code;
-        $referrals = Referral::where('referring_facility_id', $loggedInuserFacility)
+        $user = Auth::user();
+
+        // Check if the user has a facility assigned.
+        if (!$user->userFacility) {
+            // If not, redirect to the dashboard with an error message.
+            return redirect()->route('admin.dashboard')->with('error', 'You are not assigned to a facility and cannot view outgoing referrals.');
+        }
+
+        $loggedInuserFacilityCode = $user->userFacility->Code;
+        $referrals = Referral::where('referring_facility_id', $loggedInuserFacilityCode)
             ->orderBy('created_at', 'desc')
             ->get();
         return view('referrals.outgoing.outgoing',['referralRequests'=>$referrals]);
@@ -276,17 +284,21 @@ class ReferralController extends Controller
 
 
     public function incomingReferrals(){
-        //getting referrals associated to a particular facility
-        $referralRequests = Referral::orderBy('created_at', 'desc')->get();
+        $user = Auth::user();
 
-         $loggedInuserFacility = Auth::user()->userFacility->Code;
+        // Check if the user has a facility assigned.
+        if (!$user->userFacility) {
+            // If not, redirect to the dashboard with an error message.
+            return redirect()->route('admin.dashboard')->with('error', 'You are not assigned to a facility and cannot view incoming referrals.');
+        }
 
-        $referrals = Referral::where('referredFacility', $loggedInuserFacility)
+        $loggedInuserFacilityCode = $user->userFacility->Code;
+
+        $referrals = Referral::where('referredFacility', $loggedInuserFacilityCode)
             ->orderBy('created_at', 'desc')
             ->get();
 
         return view('referrals.index')->with(['referralRequests' => $referrals]);
-
     }
 
 

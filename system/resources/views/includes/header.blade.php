@@ -1,16 +1,23 @@
-
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
         <i class="bi bi-list toggle-sidebar-btn"></i>
-        <a href="index.html" class="logo d-flex align-items-center">
+        @if(Auth::user()->hasRole(['super_admin', 'admin']))
+            <a href="{{ route('admin.dashboard') }}" class="logo d-flex align-items-center">
+        @elseif(Auth::user()->hasRole('doctor'))
+            <a href="{{ route('doctor.dashboard') }}" class="logo d-flex align-items-center">
+        @else
+            <a href="{{ route('user.dashboard') }}" class="logo d-flex align-items-center">
+        @endif
             <img src="" alt="">
             <span class="d-none d-lg-block">Angaza Referral System </span>
         </a>
 
     </div><!-- End Logo -->
 
+    @if(auth()->user() && auth()->user()->userFacility)
     <h6 class="card-title" style="font-size: 90% !important;">{{ auth()->user()->userFacility->Code }} | {{ auth()->user()->userFacility->Officialname }} ({{ auth()->user()->userFacility->County }} County)</h6>
+    @endif
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
 
@@ -24,77 +31,43 @@
 
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
+                    @if(auth()->user() && auth()->user()->userFacility)
                     <span class="badge bg-primary badge-number">{{auth()->user()->userFacility->unreadNotifications->count()}}</span>
+                    @endif
                 </a><!-- End Notification Icon -->
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
-                        You have {{auth()->user()->userFacility->unreadNotifications->count()}} new referral requests
-                        <a href="{{route('referrals.incoming') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                        @if(auth()->user() && auth()->user()->userFacility)
+                        You have {{auth()->user()->userFacility->unreadNotifications->count()}} new notifications
+                        @else
+                        You have no new notifications
+                        @endif
+                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
 
-                    @foreach(Auth::user()->userFacility->unreadNotifications as $notification)
+                    @if(Auth::user()->userFacility)
+                        @foreach(Auth::user()->userFacility->unreadNotifications as $notification)
 
-                        <a href={{ url('/referral/view-incoming/'.$notification->data['referral_id']) }} class="notification-item">
-                            <i class="bi bi-info-circle text-primary"></i>
-                            <div>
+                            <a href={{ url('/referral/view-incoming/'.$notification->data['referral_id']) }} class="notification-item">
+                                <i class="bi bi-info-circle text-primary"></i>
+                                <div>
 
-                                <h4>{{$notification->data['data']}}</h4>
-                                <p>{{$notification->data['from']}}</p>
-                                <p>{{$notification->created_at->diffForHumans() }} ago</p>
-                            </div>
-                        </a>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                                    <h4>{{$notification->data['data']}}</h4>
+                                    <p>{{$notification->data['from']}}</p>
+                                    <p>{{$notification->created_at->diffForHumans() }} ago</p>
+                                </div>
+                            </a>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                    @endforeach
+                        @endforeach
+                    @endif
 
-
-
-
-
-{{--                    <li class="notification-item">--}}
-{{--                        <i class="bi bi-x-circle text-danger"></i>--}}
-{{--                        <div>--}}
-{{--                            <h4>Atque rerum nesciunt</h4>--}}
-{{--                            <p>Quae dolorem earum veritatis oditseno</p>--}}
-{{--                            <p>1 hr. ago</p>--}}
-{{--                        </div>--}}
-{{--                    </li>--}}
-
-{{--                    <li>--}}
-{{--                        <hr class="dropdown-divider">--}}
-{{--                    </li>--}}
-
-{{--                    <li class="notification-item">--}}
-{{--                        <i class="bi bi-check-circle text-success"></i>--}}
-{{--                        <div>--}}
-{{--                            <h4>Sit rerum fuga</h4>--}}
-{{--                            <p>Quae dolorem earum veritatis oditseno</p>--}}
-{{--                            <p>2 hrs. ago</p>--}}
-{{--                        </div>--}}
-{{--                    </li>--}}
-
-{{--                    <li>--}}
-{{--                        <hr class="dropdown-divider">--}}
-{{--                    </li>--}}
-
-{{--                    <li class="notification-item">--}}
-{{--                        <i class="bi bi-info-circle text-primary"></i>--}}
-{{--                        <div>--}}
-{{--                            <h4>Dicta reprehenderit</h4>--}}
-{{--                            <p>Quae dolorem earum veritatis oditseno</p>--}}
-{{--                            <p>4 hrs. ago</p>--}}
-{{--                        </div>--}}
-{{--                    </li>--}}
-
-{{--                    <li>--}}
-{{--                        <hr class="dropdown-divider">--}}
-{{--                    </li>--}}
                     <li class="dropdown-footer">
                         <a href="{{route('referrals.incoming') }}">Show all notifications</a>
                     </li>
@@ -180,9 +153,8 @@
                     <li class="dropdown-header">
                         <h6>{{ Auth::user()->name }}</h6>
                         <span>
-{{--                            {{ Auth::user()->userRole->name }}--}}
                             @if(auth()->user()->roles())
-                                'Doctor'
+                                {{ auth()->user()->roles->pluck('name')->implode(', ') }}
                             @endif
                         </span>
                     </li>

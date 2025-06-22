@@ -26,9 +26,9 @@ Welcome to the Angaza Referral System documentation. This documentation provides
 
 ### API Reference
 - [API Overview](api/overview.md)
-- [Controllers](api/controllers.md)
-- [Models](api/models.md)
-- [Routes](api/routes.md)
+  - [Controllers](api/controllers.md)
+  - [Models](api/models.md)
+  - [Routes](api/routes.md)
 
 ### Standards
 - [Health Standards](standards/health-standards.md)

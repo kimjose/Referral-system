@@ -11,6 +11,9 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\Phq9Controller;
+use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\GroupController;
 
 Route::get('/', [UserController::class, 'signIn'])->name('user.signIn');
 Route::post('/user-login', [UserController::class, 'login'])->name('user.login');
@@ -29,6 +32,34 @@ Route::get('/referrals-count', [UserController::class, 'getReferralsCount'])->na
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
 
+    // User Management Routes
+    Route::prefix('user-management')->name('user-management.')->group(function () {
+        Route::get('/', [UserManagementController::class, 'index'])->name('index');
+        Route::get('/create', [UserManagementController::class, 'create'])->name('create');
+        Route::post('/', [UserManagementController::class, 'store'])->name('store');
+        Route::get('/{user}', [UserManagementController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [UserManagementController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [UserManagementController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UserManagementController::class, 'destroy'])->name('destroy');
+        Route::post('/{user}/change-password', [UserManagementController::class, 'changePassword'])->name('change-password');
+        Route::post('/bulk-action', [UserManagementController::class, 'bulkAction'])->name('bulk-action');
+        Route::get('/statistics', [UserManagementController::class, 'statistics'])->name('statistics');
+        Route::get('/export', [UserManagementController::class, 'export'])->name('export');
+    });
+
+    // Role Management Routes
+    Route::prefix('role-management')->name('role-management.')->group(function () {
+        Route::get('/', [RoleManagementController::class, 'index'])->name('index');
+        Route::get('/create', [RoleManagementController::class, 'create'])->name('create');
+        Route::post('/', [RoleManagementController::class, 'store'])->name('store');
+        Route::get('/{role}', [RoleManagementController::class, 'show'])->name('show');
+        Route::get('/{role}/edit', [RoleManagementController::class, 'edit'])->name('edit');
+        Route::put('/{role}', [RoleManagementController::class, 'update'])->name('update');
+        Route::delete('/{role}', [RoleManagementController::class, 'destroy'])->name('destroy');
+        Route::post('/{role}/assign-permissions', [RoleManagementController::class, 'assignPermissions'])->name('assign-permissions');
+        Route::post('/{role}/clone', [RoleManagementController::class, 'clone'])->name('clone');
+        Route::get('/statistics', [RoleManagementController::class, 'statistics'])->name('statistics');
+    });
 
     Route::get('/facilities', [ReferralController::class, 'facilities'])->name('referral.facilities');
     Route::get('/medicalTerms', [ReferralController::class, 'medicalTerms'])->name('referral.medicalTerms');
@@ -117,4 +148,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/ServiceRequest', [ReferralController::class, 'submitReferral'])->name('fhir.referral.submit');
         Route::get('/ServiceRequest', [ReferralController::class, 'search'])->name('fhir.referral.search');
     });
+
+    // Verification Routes
+    Route::prefix('verification')->name('verification.')->middleware('auth')->group(function () {
+        Route::get('patient', [App\Http\Controllers\VerificationController::class, 'showPatientVerification'])->name('patient')->middleware('permission:verify patient');
+        Route::get('referral', [App\Http\Controllers\VerificationController::class, 'showReferralVerification'])->name('referral')->middleware('permission:verify referral');
+    });
+
+    // Group Management Routes
+    Route::resource('groups', GroupController::class)->middleware('auth');
 });

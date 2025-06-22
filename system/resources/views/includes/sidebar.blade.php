@@ -113,12 +113,12 @@
             </a>
             <ul id="verification-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="#">
+                    <a href="{{ route('verification.patient') }}">
                         <i class="bi bi-circle"></i><span>Verify Patient</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('verification.referral') }}">
                         <i class="bi bi-circle"></i><span>Verify Referral</span>
                     </a>
                 </li>
@@ -160,6 +160,37 @@
                 </li>
             </ul>
         </li><!-- End Reports Nav -->
+
+        <li class="nav-heading">Settings</li>
+
+        @can('view users')
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#user-management-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people"></i><span>User Management</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="user-management-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                @can('view users')
+                <li>
+                    <a href="{{ route('user-management.index') }}">
+                        <i class="bi bi-circle"></i><span>Users</span>
+                    </a>
+                </li>
+                @endcan
+                @can('view roles')
+                <li>
+                    <a href="{{ route('role-management.index') }}">
+                        <i class="bi bi-circle"></i><span>Roles</span>
+                    </a>
+                </li>
+                @endcan
+                <li>
+                    <a href="{{ route('groups.index') }}">
+                        <i class="bi bi-circle"></i><span>Groups</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End User Management Nav -->
+        @endcan
 
     </ul>
 
