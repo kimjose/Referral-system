@@ -14,6 +14,7 @@ use App\Http\Controllers\Phq9Controller;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', [UserController::class, 'signIn'])->name('user.signIn');
 Route::post('/user-login', [UserController::class, 'login'])->name('user.login');
@@ -127,9 +128,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('ptsd5/store', [ExtraFormsController::class, 'storePtsd5'])->name('ptsd5.storePtsd5');
 
     //admin routes
-    Route::get('/admin/dashboard/charts', [AdminController::class, 'admin'])->name('admin.dashboard.charts');
-    Route::get('/admin/test-charts', [AdminController::class, 'testCharts'])->name('admin.test-charts');
+    Route::middleware(['auth'])->prefix('admin')->group(function () {
+      //admin routes
+      Route::get('/dashboard', [AdminController::class, 'admin'])->name('admin.dashboard');
+      Route::get('/dashboard/charts', [AdminController::class, 'visualizations'])->name('admin.dashboard.charts');
+      Route::get('/test-charts', [AdminController::class, 'testCharts'])->name('admin.test-charts');
+      Route::get('/reports/aggregate', [AdminController::class, 'aggregateReport'])->name('admin.reports.aggregate');
+      Route::get('/reports/disaggregate', [AdminController::class, 'disaggregateReport'])->name('admin.reports.disaggregate');
+      Route::get('/reports/turnaround-time', [AdminController::class, 'turnaroundTimeReport'])->name('admin.reports.turnaround-time');
+      Route::get('/reports/line-list/{status}', [AdminController::class, 'lineList'])->name('admin.reports.linelist');
+      Route::get('/reports/referring-facility', [AdminController::class, 'referringFacilityReport'])->name('admin.reports.referring-facility');
+    });
 
+    Route::middleware(['auth'])->prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/incoming', [ReportController::class, 'incomingReports'])->name('incoming');
+        Route::get('/outgoing', [ReportController::class, 'outgoingReports'])->name('outgoing');
+        Route::get('/completed', [ReportController::class, 'completedReports'])->name('completed');
+    });
 
     //referral-testing routes
     Route::post('/testing', [ReferralController::class, 'sendtesting'])->name('sendreferral');
