@@ -149,16 +149,10 @@
         </li><!-- End Referrals Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-graph-up"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link collapsed" href="{{ route('reports.index') }}">
+                <i class="bi bi-journal-text"></i>
+                <span>Reports</span>
             </a>
-            <ul id="reports-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="{{ route('admin.dashboard.charts') }}">
-                        <i class="bi bi-circle"></i><span>Visualizations</span>
-                    </a>
-                </li>
-            </ul>
         </li><!-- End Reports Nav -->
 
         <li class="nav-heading">Settings</li>
