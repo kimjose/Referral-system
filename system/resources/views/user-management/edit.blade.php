@@ -53,11 +53,11 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="role" class="col-sm-2 col-form-label">Role</label>
+                                <label for="role_id" class="col-sm-2 col-form-label">Role</label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="role" name="role" required>
+                                    <select class="form-select" id="role_id" name="role_id" required>
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
+                                            <option value="{{ $role->id }}" {{ $user->roles->contains('id', $role->id) ? 'selected' : '' }}>
                                                 {{ $role->name }}
                                             </option>
                                         @endforeach

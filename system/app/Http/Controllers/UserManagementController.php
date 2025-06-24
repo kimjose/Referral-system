@@ -250,6 +250,13 @@ class UserManagementController extends Controller
                 $user->groups()->detach();
             }
 
+            // Sync permissions
+            if ($request->has('permissions')) {
+                $user->syncPermissions($request->permissions);
+            } else {
+                $user->syncPermissions([]);
+            }
+
             // Log the action
             Log::info('User updated', [
                 'user_id' => $user->id,
