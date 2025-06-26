@@ -14,9 +14,16 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\Patient;
 use App\Models\Referral;
 use App\Models\Mappings;
+use App\Services\FhirService;
 
 class ReferralController extends Controller
 {
+    protected $fhirService;
+
+    public function __construct(FhirService $fhirService)
+    {
+        $this->fhirService = $fhirService;
+    }
 
     public function show($tab)
     {
@@ -298,57 +305,53 @@ class ReferralController extends Controller
 
     public function submitReferral(Request $request)
     {
-        //Validate the form data
-        $validatedData = $request->validate([
-            'referringOfficer' => 'required',
-            //'reasonReferral' => 'required',
-            'priorityLevel' => 'required',
-            // TODO Add validation rules for other form fields
-        ]);
+        // First validate the FHIR ServiceRequest
+        $validator = $this->fhirService->validateServiceRequest($request->all());
+        if ($validator->fails()) {
+            return response()->json(
+                $this->fhirService->createOperationOutcome('error', 'invalid', $validator->errors()->first()),
+                422
+            );
+        }
 
-        // Create a new referral instance
-        $referral = new Referral;
-        $referral->clientName = $request->input('clientName');
-        $referral->clientUPI = $request->input('clientUPI');
-        $referral->referringOfficer = Auth::user()->name;
-        $referral->referring_facility_id = Auth::user()->facility_id;
-        $referral->historyInvestigation = $request->input('historyInvestigation');
-        $referral->diagnosis = $request->input('diagnosis');
-        $referral->reasonReferral = $request->input('reasonReferral');
-        $referral->attachments = $request->input('attachments');
-        $referral->additionalNotes = $request->input('additionalNotes');
-        $referral->priorityLevel = $request->input('priorityLevel');
-        $referral->serviceCategory = $request->input('serviceCategory');
-        $referral->service = $request->input('service');
-        $referral->referredFacility = $request->input('facility');
-        $referral->distance = $request->input('distance');
-        $referral->serviceNotes = $request->input('serviceNotes');
+        try {
+            $referral = new Referral();
+            $referral->fill($request->all());
+            $referral->save();
 
-
-        // Save the referral to the database
-        $referral->save();
-
-        //return redirect()->back()->with('success', 'Referral Request Submitted successfully');
-
-
-        $referralId = $referral->id;
-
-        $user = Auth::user();
-        $userFacility = $user->userFacility;
-
-        $facility = m_f_l_s::where('Code', $referral->referredFacility)->first();
-        $notification = new ReferralRequestSent($referralId, $userFacility->Code, "Referral Request");
-
-        Notification::send($facility, $notification);        // Redirect to a success page or display a success message
-        return Redirect::route('referral.outgoing')->with('success', 'Referral Request Submitted successfully');
+            return response()->json([
+                'resourceType' => 'Bundle',
+                'type' => 'transaction-response',
+                'entry' => [
+                    [
+                        'response' => [
+                            'status' => '201 Created',
+                            'location' => "ServiceRequest/{$referral->id}"
+                        ]
+                    ]
+                ]
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(
+                $this->fhirService->createOperationOutcome('error', 'processing', 'Error creating referral: ' . $e->getMessage()),
+                500
+            );
+        }
     }
 
 
 
-    public function outgoing()
-    {
-        $loggedInuserFacility = Auth::user()->userFacility->Code;
-        $referrals = Referral::where('referring_facility_id', $loggedInuserFacility)
+    public function outgoing(){
+        $user = Auth::user();
+
+        // Check if the user has a facility assigned.
+        if (!$user->userFacility) {
+            // If not, redirect to the dashboard with an error message.
+            return redirect()->route('admin.dashboard')->with('error', 'You are not assigned to a facility and cannot view outgoing referrals.');
+        }
+
+        $loggedInuserFacilityCode = $user->userFacility->Code;
+        $referrals = Referral::where('referring_facility_id', $loggedInuserFacilityCode)
             ->orderBy('created_at', 'desc')
             ->get();
         return view('referrals.outgoing.outgoing', ['referralRequests' => $referrals]);
@@ -356,19 +359,22 @@ class ReferralController extends Controller
 
 
 
-    public function incomingReferrals()
-    {
-        //getting referrals associated to a particular facility
-        $referralRequests = Referral::orderBy('created_at', 'desc')->get();
+    public function incomingReferrals(){
+        $user = Auth::user();
 
-        $loggedInuserFacility = Auth::user()->userFacility->Code;
+        // Check if the user has a facility assigned.
+        if (!$user->userFacility) {
+            // If not, redirect to the dashboard with an error message.
+            return redirect()->route('admin.dashboard')->with('error', 'You are not assigned to a facility and cannot view incoming referrals.');
+        }
 
-        $referrals = Referral::where('referredFacility', $loggedInuserFacility)
+        $loggedInuserFacilityCode = $user->userFacility->Code;
+
+        $referrals = Referral::where('referredFacility', $loggedInuserFacilityCode)
             ->orderBy('created_at', 'desc')
             ->get();
 
         return view('referrals.index')->with(['referralRequests' => $referrals]);
-
     }
 
 
@@ -460,104 +466,126 @@ class ReferralController extends Controller
 
 
 
-    public function fhirJson()
+    public function fhirJson(Request $request)
     {
-
-        $json = [
-            'resourceType' => 'referralRequest',
-            "id" => "df792cca-af36-47ab-81b3-c9770fbe4bfd",
-            "status" => "active",
-            "subject" => [
-                "reference" => "https://client.registry/0-TGGA-rrTT",
-                "code" => '0-TGGA-rrTT',
-                "display" => "John Doe"
-            ],
-            "priority" => "STAT",
-            "requester" => [
-                "reference" => "https://worker.registry/0-TGGA-TYRTT",
-                "code" => "0-TGGA-TYRTT",
-                "display" => "Dr. Jane Smith"
-            ],
-            "specialty" => [
-                "coding" => [
-                    "system" => "http://nhdd.health.go.ke",
-                    "code" => "394585001",
-                    "display" => "Cardiology"
+        // Check if legacy format is requested
+        if ($request->has('legacy') && $request->legacy === 'true') {
+            return response()->json([
+                'resourceType' => 'referralRequest',
+                "id" => "df792cca-af36-47ab-81b3-c9770fbe4bfd",
+                "status" => "active",
+                "subject"=> [
+                    "reference" => "https://client.registry/0-TGGA-rrTT",
+                    "code" => '0-TGGA-rrTT',
+                    "display"=> "John Doe"
                 ],
-                "text" => "Cardiology"
-            ],
-            "recipient" => [
-                [
-                    "reference" => "https://facility-registy.com/t6gr86gfrr",
-                    "code" => "t6gr86gfrr",
-                    "display" => "Coast General",
+                "priority"=> "STAT",
+                "requester"=> [
+                    "reference"=> "https://worker.registry/0-TGGA-TYRTT",
+                    "code" => "0-TGGA-TYRTT",
+                    "display"=> "Dr. Jane Smith"
+                ],
+                "specialty"=> [
+                    "coding"=> [
+                        "system"=> "http://nhdd.health.go.ke",
+                        "code"=> "394585001",
+                        "display"=> "Cardiology"
+                    ],
+                    "text" => "Cardiology"
+                ],
+                "recipient"=> [
+                    [
+                        "reference"=> "https://facility-registy.com/t6gr86gfrr",
+                        "code" => "t6gr86gfrr",
+                        "display" => "Coast General",
+                    ]
+                ],
+                "reasonCode"=> [
+                    "coding"=> [
+                        "system"=> "http://nhdd.health.go.ke/162864005",
+                        "code"=> "162864005",
+                        "display"=> "Chest pain"
+                    ],
+                    "text" => "Chest Pain",
+                ],
+                "authoredOn"=> "2023-04-13T12:00:00Z",
+                "reasonReference" => [
+                    [
+                        "reference" => 'https://shr.go.ke/345678',
+                        "code" => '345678',
+                        "display" => 'specialized treatment'
+                    ],
+                ],
+                "relevantHistory" => [
+                    [
+                        "reference" => 'https://shr.go.ke/43GS556GSG',
+                        "code" => '43GS556GSG',
+                        'display' => 'Malaria include vitals',
+                    ],
+                    [
+                        "reference" => 'https://shr.go.ke/43GS556G8G',
+                        "code" => '43GS556G8G',
+                        "display" => 'TB Infection',
+                    ]
+                ],
+                "type" => [
+                    "coding" => [
+                        "reference" => 'https://nhdd.go.ke/46765efg567',
+                        "code" => '46765efg567',
+                        "display" => 'Referral to cardiology service',
+                    ],
+                ],
+                "context" => [
+                    "reference" => "https://shr.go.ke/encounter/344S656S55S",
+                    "code" => "344S656S55S",
+                    "text" => "Episode 10",
+                ],
+                "supportingInfo" => [
+                    [
+                        "reference" => "https://shr.go.ke/34567823H",
+                        "code" => "34567823H",
+                        "text" => "Medical history, lab results and clinical notes and triage",
+                    ],
+                    [
+                        "reference" => "https://shr.go.ke/34567823H",
+                        "code" => "34567823H",
+                        "text" => "Medical history, lab results and clinical notes",
+                    ],
+                    [
+                        "reference" => "https://shr.go.ke/34567823H",
+                        "code" => "34567823H",
+                        "text" => "Medical history, lab results and clinical notes",
+                    ]
                 ]
-            ],
-            "reasonCode" => [
-                "coding" => [
-                    "system" => "http://nhdd.health.go.ke/162864005",
-                    "code" => "162864005",
-                    "display" => "Chest pain"
-                ],
-                "text" => "Chest Pain",
-            ],
-            "authoredOn" => "2023-04-13T12:00:00Z",
-            "reasonReference" => [
-                [
-                    "reference" => 'https://shr.go.ke/345678',
-                    "code" => '345678',
-                    "display" => 'specialized treatment'
-                ],
-            ],
-            "relevantHistory" => [
-                [
-                    "reference" => 'https://shr.go.ke/43GS556GSG',
-                    "code" => '43GS556GSG',
-                    'display' => 'Malaria include vitals',
-                ],
-                [
-                    "reference" => 'https://shr.go.ke/43GS556G8G',
-                    "code" => '43GS556G8G',
-                    "display" => 'TB Infection',
-                ]
-            ],
-            "type" => [
-                "coding" => [
-                    "reference" => 'https://nhdd.go.ke/46765efg567',
-                    "code" => '46765efg567',
-                    "display" => 'Referral to cardiology service',
-                ],
-            ],
-            "context" => [
-                "reference" => "https://shr.go.ke/encounter/344S656S55S",
-                "code" => "344S656S55S",
-                "text" => "Episode 10",
-            ],
-            "supportingInfo" => [
-                [
-                    "reference" => "https://shr.go.ke/34567823H",
-                    "code" => "34567823H",
-                    "text" => "Medical history, lab results and clinical notes and triage",
-                ],
-                [
-                    "reference" => "https://shr.go.ke/34567823H",
-                    "code" => "34567823H",
-                    "text" => "Medical history, lab results and clinical notes",
-                ],
-                [
-                    "reference" => "https://shr.go.ke/34567823H",
-                    "code" => "34567823H",
-                    "text" => "Medical history, lab results and clinical notes",
-                ]
-            ],
+            ]);
+        }
 
-        ];
+        // Default to new FHIR-compliant format
+        $referral = Referral::latest()->first();
+        
+        if (!$referral) {
+            return response()->json(
+                $this->fhirService->createOperationOutcome('error', 'not-found', 'No referral found'),
+                404
+            );
+        }
 
-        $headers = [
-            'Content-Type' => 'application',
-            'Accept' => 'application/json'
-        ];
+        return response()->json($this->fhirService->referralToServiceRequest($referral));
+    }
 
-        return response()->json($json);
+    public function validateReferral(Request $request)
+    {
+        $validator = $this->fhirService->validateServiceRequest($request->all());
+
+        if ($validator->fails()) {
+            return response()->json(
+                $this->fhirService->createOperationOutcome('error', 'invalid', $validator->errors()->first()),
+                422
+            );
+        }
+
+        return response()->json(
+            $this->fhirService->createOperationOutcome('information', 'informational', 'Referral is valid')
+        );
     }
 }

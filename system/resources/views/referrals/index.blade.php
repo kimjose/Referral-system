@@ -34,10 +34,10 @@
                                     <td>{{ $loop->iteration }}</td>
 
                                     <td>{{ $referralRequest->clientName }}</td>
-                                    <td>{{ $referralRequest->priorityLevel }}</td>
-                                    <td>{{ $referralRequest->referringOfficer }}</td>
-                                    {{-- <td>{{ $referralRequest->service }}</td>--}}
-                                    <td>
+                                    <td >{{ $referralRequest->priority }}</td>
+                                    <td >{{ $referralRequest->referringOfficer }}</td>
+{{--                                    <td>{{ $referralRequest->service }}</td>--}}
+                                    <td >
                                         <p class="badge
                                                             @if ($referralRequest->status == 'Pending')
                                                                 bg-warning

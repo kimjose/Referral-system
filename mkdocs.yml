@@ -1,0 +1,90 @@
+site_name: Angaza Referral System Documentation
+site_description: Documentation for the Angaza Referral System
+site_author: Angaza Team
+repo_url: https://github.com/your-org/angaza-referral
+repo_name: angaza-referral
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - search.share
+    - search.suggest
+
+nav:
+  - Home: index.md
+  - User Guide:
+      - Getting Started: user-guide/getting-started.md
+      - User Manual: user-guide/user-manual.md
+      - Features: user-guide/features.md
+      - Troubleshooting: user-guide/troubleshooting.md
+  - Development:
+      - Setup Guide: development/setup.md
+      - API Documentation: api/api-documentation.md
+      - Database Schema: database/schema.md
+      - Migrations: database/migrations.md
+      - Views: development/views.md
+  - Architecture:
+      - System Overview: architecture/system-overview.md
+      - System Components: architecture/system-components.md
+      - System Diagrams: architecture/system-diagrams.md
+      - Class Diagram: architecture/class-diagram.md
+      - Sequence Diagram: architecture/sequence-diagram.md
+  - API Reference:
+      - API Overview: api/overview.md
+      - Controllers: api/controllers.md
+      - Models: api/models.md
+      - Routes: api/routes.md
+  - Standards:
+      - Health Standards: standards/health-standards.md
+      - HL7 Compliance: standards/hl7-compliance.md
+      - ICD11 Compliance: standards/icd11-compliance.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist
+  - pymdownx.snippets
+  - pymdownx.arithmatex
+  - admonition
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search
+  - git-revision-date-localized
+  - minify:
+      minify_html: true
+  - mermaid2 

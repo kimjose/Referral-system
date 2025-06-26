@@ -11,6 +11,10 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\Phq9Controller;
+use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', [UserController::class, 'signIn'])->name('user.signIn');
 Route::post('/user-login', [UserController::class, 'login'])->name('user.login');
@@ -29,6 +33,34 @@ Route::get('/referrals-count', [UserController::class, 'getReferralsCount'])->na
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
 
+    // User Management Routes
+    Route::prefix('user-management')->name('user-management.')->group(function () {
+        Route::get('/', [UserManagementController::class, 'index'])->name('index');
+        Route::get('/create', [UserManagementController::class, 'create'])->name('create');
+        Route::post('/', [UserManagementController::class, 'store'])->name('store');
+        Route::get('/{user}', [UserManagementController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [UserManagementController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [UserManagementController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UserManagementController::class, 'destroy'])->name('destroy');
+        Route::post('/{user}/change-password', [UserManagementController::class, 'changePassword'])->name('change-password');
+        Route::post('/bulk-action', [UserManagementController::class, 'bulkAction'])->name('bulk-action');
+        Route::get('/statistics', [UserManagementController::class, 'statistics'])->name('statistics');
+        Route::get('/export', [UserManagementController::class, 'export'])->name('export');
+    });
+
+    // Role Management Routes
+    Route::prefix('role-management')->name('role-management.')->group(function () {
+        Route::get('/', [RoleManagementController::class, 'index'])->name('index');
+        Route::get('/create', [RoleManagementController::class, 'create'])->name('create');
+        Route::post('/', [RoleManagementController::class, 'store'])->name('store');
+        Route::get('/{role}', [RoleManagementController::class, 'show'])->name('show');
+        Route::get('/{role}/edit', [RoleManagementController::class, 'edit'])->name('edit');
+        Route::put('/{role}', [RoleManagementController::class, 'update'])->name('update');
+        Route::delete('/{role}', [RoleManagementController::class, 'destroy'])->name('destroy');
+        Route::post('/{role}/assign-permissions', [RoleManagementController::class, 'assignPermissions'])->name('assign-permissions');
+        Route::post('/{role}/clone', [RoleManagementController::class, 'clone'])->name('clone');
+        Route::get('/statistics', [RoleManagementController::class, 'statistics'])->name('statistics');
+    });
 
     Route::get('/facilities', [ReferralController::class, 'facilities'])->name('referral.facilities');
     Route::get('/medicalTerms', [ReferralController::class, 'medicalTerms'])->name('referral.medicalTerms');
@@ -96,9 +128,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('ptsd5/store', [ExtraFormsController::class, 'storePtsd5'])->name('ptsd5.storePtsd5');
 
     //admin routes
-    Route::get('/admin/dashboard/charts', [AdminController::class, 'admin'])->name('admin.dashboard.charts');
-    Route::get('/admin/test-charts', [AdminController::class, 'testCharts'])->name('admin.test-charts');
+    Route::middleware(['auth'])->prefix('admin')->group(function () {
+      //admin routes
+      Route::get('/dashboard', [AdminController::class, 'admin'])->name('admin.dashboard');
+      Route::get('/dashboard/charts', [AdminController::class, 'visualizations'])->name('admin.dashboard.charts');
+      Route::get('/test-charts', [AdminController::class, 'testCharts'])->name('admin.test-charts');
+      Route::get('/reports/aggregate', [AdminController::class, 'aggregateReport'])->name('admin.reports.aggregate');
+      Route::get('/reports/disaggregate', [AdminController::class, 'disaggregateReport'])->name('admin.reports.disaggregate');
+      Route::get('/reports/turnaround-time', [AdminController::class, 'turnaroundTimeReport'])->name('admin.reports.turnaround-time');
+      Route::get('/reports/line-list/{status}', [AdminController::class, 'lineList'])->name('admin.reports.linelist');
+      Route::get('/reports/referring-facility', [AdminController::class, 'referringFacilityReport'])->name('admin.reports.referring-facility');
+    });
 
+    Route::middleware(['auth'])->prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/incoming', [ReportController::class, 'incomingReports'])->name('incoming');
+        Route::get('/outgoing', [ReportController::class, 'outgoingReports'])->name('outgoing');
+        Route::get('/completed', [ReportController::class, 'completedReports'])->name('completed');
+    });
 
     //referral-testing routes
     Route::post('/testing', [ReferralController::class, 'sendtesting'])->name('sendreferral');
@@ -109,4 +156,21 @@ Route::group(['middleware' => 'auth'], function () {
     //referral-tabs e.g referral/tabs/tab2
     Route::get('referral/tabs/{tab}', [ReferralController::class, 'show'])->name('referral.tabs');
     Route::post('referral/tabs/save/{tab}', [ReferralController::class, 'saveTabData'])->name('referral.tabs.save');
+
+    // FHIR Routes
+    Route::prefix('fhir')->group(function () {
+        Route::get('/ServiceRequest/{id}', [ReferralController::class, 'fhirJson'])->name('fhir.referral.get');
+        Route::post('/ServiceRequest/$validate', [ReferralController::class, 'validateReferral'])->name('fhir.referral.validate');
+        Route::post('/ServiceRequest', [ReferralController::class, 'submitReferral'])->name('fhir.referral.submit');
+        Route::get('/ServiceRequest', [ReferralController::class, 'search'])->name('fhir.referral.search');
+    });
+
+    // Verification Routes
+    Route::prefix('verification')->name('verification.')->middleware('auth')->group(function () {
+        Route::get('patient', [App\Http\Controllers\VerificationController::class, 'showPatientVerification'])->name('patient')->middleware('permission:verify patient');
+        Route::get('referral', [App\Http\Controllers\VerificationController::class, 'showReferralVerification'])->name('referral')->middleware('permission:verify referral');
+    });
+
+    // Group Management Routes
+    Route::resource('groups', GroupController::class)->middleware('auth');
 });
