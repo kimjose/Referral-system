@@ -15,8 +15,8 @@ class SmsService
     public function __construct()
     {
         //$this->username = env('AT_USERNAME');
-        $this->username = env('AT_USERNAME');
-        $this->apiKey = env('AT_KEY');
+        $this->username = env('AT_USERNAME', '');
+        $this->apiKey = env('AT_KEY', '');
         //$this->from = env('AT_FROM');
         $this->from = "";
 
