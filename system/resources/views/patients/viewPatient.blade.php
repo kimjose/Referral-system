@@ -179,9 +179,135 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Referral Journey Visualization -->
+                    @php
+                        $referrals = \App\Models\Referral::where('clientUPI', $patient->upi)->orderBy('created_at')->get();
+                        $nodes = [];
+                        $edges = [];
+                        $lastFacility = null;
+                        $facilityReferralCounts = [];
+                        $hasReferrals = $referrals->count() > 0;
+                        foreach ($referrals as $ref) {
+                            $from = $ref->referring_facility_id ?: 'Unknown';
+                            $to = $ref->referredFacility ?: 'Unknown';
+                            $fromFacility = $ref->facilityReffering ? $ref->facilityReffering->Officialname : $from;
+                            $toFacility = $ref->facilityReffered ? $ref->facilityReffered->Officialname : $to;
+                            $nodes[$from] = $fromFacility;
+                            $nodes[$to] = $toFacility;
+                            $facilityReferralCounts[$from] = ($facilityReferralCounts[$from] ?? 0) + 1;
+                            $facilityReferralCounts[$to] = ($facilityReferralCounts[$to] ?? 0) + 1;
+                            $date = $ref->created_at ? $ref->created_at->format('Y-m-d') : '';
+                            $status = strtolower($ref->fhir_status ?? $ref->status ?? '');
+                            $edgeLabel = "$date | $status";
+                            $edgeClass = $status === 'completed' ? 'completed' : ($status === 'pending' ? 'pending' : ($status === 'rejected' ? 'rejected' : 'other'));
+                            $edges[] = [$from, $to, $edgeLabel, $edgeClass, $ref->id];
+                            $lastFacility = $to;
+                        }
+                        $mermaid = "graph TD\n";
+                        $mermaid .= "  Patient[\"Patient: {$patient->first_name} {$patient->last_name}\"]\n";
+                        if ($hasReferrals) {
+                            $first = $referrals->first();
+                            $from = $first->referring_facility_id ?: 'Unknown';
+                            $mermaid .= "  Patient --> {$from}\n";
+                        }
+                        foreach ($nodes as $code => $name) {
+                            $count = $facilityReferralCounts[$code] ?? 1;
+                            $mermaid .= "  {$code}[\"{$name}\"]:::facilityNode\n";
+                        }
+                        foreach ($edges as [$from, $to, $label, $class, $refId]) {
+                            $mermaid .= "  {$from} --|{$label}| {$to}:::{$class}click {$from}_{$to}_{$refId} callShowReferralModal('{$refId}')\n";
+                        }
+                        if ($hasReferrals && strtolower($referrals->last()->fhir_status ?? $referrals->last()->status) === 'completed') {
+                            $mermaid .= "  {$lastFacility} --> Community[\"Community/CHP\"]:::completed\n";
+                        }
+                        $mermaid .= "  classDef completed stroke:#28a745,stroke-width:3px,color:#28a745;\n";
+                        $mermaid .= "  classDef pending stroke:#fd7e14,stroke-width:3px,color:#fd7e14;\n";
+                        $mermaid .= "  classDef rejected stroke:#dc3545,stroke-width:3px,color:#dc3545;\n";
+                        $mermaid .= "  classDef other stroke:#6c757d,stroke-width:2px,color:#6c757d;\n";
+                        $mermaid .= "  classDef facilityNode fill:#f8f9fa,stroke:#007bff,stroke-width:2px;\n";
+                    @endphp
+                    <div class="col-md-8 mb-3">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title d-flex align-items-center">Referral Journey
+                            <span class="ms-2" data-bs-toggle="tooltip" title="This diagram shows the patient's referral path. Click on arrows for details. Use the export button to download.">
+                              <i class="bi bi-info-circle text-info"></i>
+                            </span>
+                            <button class="btn btn-sm btn-outline-secondary ms-auto" id="exportReferralTree" title="Export diagram"><i class="bi bi-download"></i> Export</button>
+                          </h5>
+                          @if($hasReferrals)
+                          <div class="mermaid" id="referralMermaid">
+                            {!! $mermaid !!}
+                          </div>
+                          @else
+                          <div class="alert alert-info">No referrals found for this patient.</div>
+                          @endif
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Modal for referral details -->
+                    <div class="modal fade" id="referralDetailModal" tabindex="-1" aria-labelledby="referralDetailModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="referralDetailModalLabel">Referral Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" id="referralDetailBody">
+                            <!-- Details will be loaded here -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
               </div>
 
             </div>
         </div>
 @endsection
+
+@push('scripts')
+<script>
+// Tooltip
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// Export diagram as SVG/PNG
+function exportMermaidDiagram() {
+  const svg = document.querySelector('#referralMermaid svg');
+  if (!svg) return alert('Diagram not rendered yet.');
+  const serializer = new XMLSerializer();
+  const svgString = serializer.serializeToString(svg);
+  const blob = new Blob([svgString], {type: 'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'referral-journey.svg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+document.getElementById('exportReferralTree').addEventListener('click', exportMermaidDiagram);
+
+// Modal logic for referral details
+window.callShowReferralModal = function(referralId) {
+  fetch(`/referral/api/details/${referralId}`)
+    .then(res => res.json())
+    .then(data => {
+      let html = `<ul class='list-group'>`;
+      html += `<li class='list-group-item'><strong>Date:</strong> ${data.created_at}</li>`;
+      html += `<li class='list-group-item'><strong>Status:</strong> ${data.status}</li>`;
+      html += `<li class='list-group-item'><strong>Diagnosis:</strong> ${data.diagnosis}</li>`;
+      html += `<li class='list-group-item'><strong>Service:</strong> ${data.service}</li>`;
+      html += `<li class='list-group-item'><strong>Notes:</strong> ${data.additionalNotes}</li>`;
+      html += `</ul>`;
+      document.getElementById('referralDetailBody').innerHTML = html;
+      var modal = new bootstrap.Modal(document.getElementById('referralDetailModal'));
+      modal.show();
+    });
+}
+</script>
+@endpush

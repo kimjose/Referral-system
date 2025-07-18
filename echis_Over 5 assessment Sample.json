@@ -1,0 +1,18 @@
+{
+  "_id": "",
+  "upi": "",
+  "name": ",
+  "service": "u5_assessment",
+  "screening": {
+    "_vitamin_a_doses_given": ""
+  },
+  "supportingInfo": {
+    "is_participating_in_growth_monitoring": "yes"
+  },
+  "reported_date": 1727357510803,
+  "follow_up_date": "2024-09-29",
+  "chu_code": "",
+  "chu_name": "",
+  "referred_to_facility_code": "",
+  "referred_to_facility_name": ""
+}

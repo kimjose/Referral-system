@@ -13,6 +13,8 @@ class FhirService
      */
     public function referralToServiceRequest(Referral $referral)
     {
+        $icd11Code = $referral->icd11_code ?? null;
+        $diagnosis = $referral->diagnosis;
         return [
             'resourceType' => 'ServiceRequest',
             'id' => $referral->id,
@@ -29,13 +31,13 @@ class FhirService
                     ]
                 ]
             ],
-            'priority' => $this->mapPriority($referral->priorityLevel),
+            'priority' => $this->mapPriority($referral->priorityLevel ?? $referral->priority),
             'code' => [
                 'coding' => [
                     [
-                        'system' => 'http://snomed.info/sct',
-                        'code' => $referral->diagnosis,
-                        'display' => $referral->kmhflConcepts->{'from concept name'} ?? ''
+                        'system' => $icd11Code ? 'http://id.who.int/icd/release/11' : 'http://snomed.info/sct',
+                        'code' => $icd11Code ?: $referral->diagnosis,
+                        'display' => $diagnosis
                     ]
                 ]
             ],

@@ -31,6 +31,7 @@ class ReferralTabController extends Controller
         $referringOfficer = $request->input('referringOfficer');
         $historyInvestigation = $request->input('historyInvestigation');
         $diagnosis = $request->input('diagnosis');
+        $icd11_code = $request->input('icd11_code');
         $reasonReferral = $request->input('reasonReferral');
         $additionalNotes = $request->input('additionalNotes');
         $priority = $request->input('priorityLevel');
@@ -39,6 +40,7 @@ class ReferralTabController extends Controller
         $referral->referringOfficer = $referringOfficer;
         $referral->historyInvestigation = $historyInvestigation;
         $referral->diagnosis = $diagnosis;
+        $referral->icd11_code = $icd11_code;
         $referral->reasonReferral = $reasonReferral;
         $referral->additionalNotes = $additionalNotes;
        $referral->referring_facility_id = $referringFacilityId;
@@ -85,11 +87,22 @@ class ReferralTabController extends Controller
         $referringFacility = m_f_l_s::where('Code', $referringFacilityCode)->first();
         $officialName = $referringFacility->Officialname;
         $this->smsService  = new SmsService();
-        $message = "You have a new referral request from ".$officialName;
+
+        // Fetch referral and patient details
+        $referral = Referral::find($referralId);
+        $patient = $referral ? $referral->patientReffered : null;
+        $patientName = $patient ? ($patient->first_name . ' ' . $patient->last_name) : ($referral->clientName ?? '');
+        $locator = $patient ? trim("{$patient->village}, {$patient->subCounty}, {$patient->county}", ', ') : '';
+
+        // Compose improved message
+        $message = "Patient {$patientName}";
+        if ($locator) {
+            $message .= " ({$locator})";
+        }
+        $message .= " has been reviewed by the doctor. Please follow up at the community level.";
+
         $recipients = "+254725377609, +254735377609";
-
         $result = $this->smsService->sendSms(2, $recipients, $message);
-
 
         $facility = m_f_l_s::where('Code', $referredFacilityCode)->first();
         $notification = new ReferralRequestSent($referralId, $referringFacilityCode, "Referral Request");
