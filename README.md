@@ -1,131 +1,365 @@
-<a name="readme-top"></a>
+# Angaza Referral System – Comprehensive Developer & Admin Guide
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
+---
 
-<br />
-<div align="center">
-<h3 align="center">Referral System</h3>
-</div>
-<br />
+## 1. Introduction
+A web-based application for managing patient referrals, integrating with eCHIS, HIE, and supporting FHIR standards. Features include referral journey visualization, SMS notifications, audit trails, analytics, and robust API documentation.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#set-up">Set-up</a></li>
-      </ul>
-    </li>
-    <li><a href="#Flowchart">Flowchart</a></li>
-    <li><a href="#Use Case Diagram">Use Case Diagram</a></li>
-    <li><a href="#Use Case Diagram">Activity Diagram</a></li>
-    <li><a href="#Use Case Diagram">Data Flow Diagram</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+---
 
+## 2. Setup & Installation
 
+### 2.1 Developer Prerequisites
+- PHP 8.1 or higher
+- MySQL 8.0 or higher
+- Composer
+- Node.js 18 or higher
+- npm or yarn
+- Git
+- Python 3.x (for documentation)
+- pip (Python package manager)
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+### 2.2 User Prerequisites
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Internet connection (2 Mbps+ recommended)
+- Desktop/Laptop: Windows 10/11, macOS 10.15+, or Linux
+- Mobile: iOS 13+ or Android 9+
+- Tablet: iPadOS 13+ or Android 9+
 
-![Referral System Screen Shot][product-screenshot]
+### 2.3 Installation Steps (Developer)
 
-### Referral System
-
-The referral system is a web-based application that allows users to create and manage referrals for medical services. It facilitates the seamless transfer of patients from one healthcare provider to another, ensuring efficient coordination and continuity of care.
-
-_For more information, please refer to the [Documentation](docs.md)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-### Built With
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-### Installation
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/angaza-referral.git
+   cd angaza-referral/system
    ```
-2. Navigate into the system directory
-   ```sh
-   cd Referral-Request-FrontEnd/system
-   ```  
-3. Install dependencies - missing `composer packages`
-   ```sh
+2. **Install PHP dependencies:**
+   ```bash
    composer install
-   ```  
-4. Install NPM packages
-   ```sh
+   ```
+3. **Install JavaScript dependencies:**
+   ```bash
    npm install
    ```
-5. Create a .env file
-
-   -  Copy content of the .env.example file
-   -  Paste it in your .env file
-
-6. Run
-   ```sh
+4. **Configure environment:**
+   ```bash
+   cp .env.example .env
    php artisan key:generate
    ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-### Set-up
-
-1. Setup Database Credentials in the .env file.
-   -  DB_HOST=localhost
-   -  DB_DATABASE=''
-   -  DB_USERNAME=''
-   -  DB_PASSWORD=''
-
-2. Publish all the schema to the database.
-   ```sh
-   php artisan migrate
-   ```  
-3. Seed the database with dummy users.
-   ```sh
-   php artisan tinker
-   User::factory()->count(5)->create()
+   - Edit `.env` and set your database credentials and all required API keys/URLs.
+5. **Configure database:**
+   - Create a MySQL database
+   - Update `.env` with database credentials
+   - Run migrations:
+     ```bash
+     php artisan migrate
+     ```
+   - Seed the database (optional or as needed):
+     ```bash
+     php artisan db:seed
+     ```
+6. **Start development server:**
+   ```bash
+   php artisan serve
    ```
-4. Navigate to your browser and type “localhost/foldernameinHTdocs/” in the address bar to access the login page.
-5. How to get the users' credentials
-   -  Access your database
-   -  Open the users table
-   -  Copy any of the usernames and paste it in the login page - username section
-   -  The password is, "password"
-6. Create faker for user and roles
-   -  Edit the roles table.
-   -  Insert the role, guard_name, and the logged in user id in the role_id
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### 2.4 Installation Steps (User/First-Time Login)
+1. Access the system through your web browser
+2. Log in using your credentials (or create an account if enabled)
+3. Complete profile setup and security steps (2FA, password, etc.)
+4. Navigate to dashboard and begin using the system
+
+### 2.5 Account Creation & Profile Setup
+- Visit the system URL provided by your administrator
+- Click "Create Account" and enter required information (name, email, phone, organization)
+- Create a strong password and verify your email
+- Complete profile setup (picture, contact info, notification preferences, language)
+
+### 2.6 Database Migration & Seeding
+- **Run all pending migrations:**
+  ```bash
+  php artisan migrate
+  ```
+- **Rollback last migration:**
+  ```bash
+  php artisan migrate:rollback
+  ```
+- **Refresh all migrations:**
+  ```bash
+  php artisan migrate:refresh
+  ```
+- **Seed data:**
+  ```bash
+  php artisan db:seed
+  ```
+- **Custom seeder example:**
+  ```php
+  class UserSeeder extends Seeder {
+      public function run() {
+          User::create([
+              'username' => 'admin',
+              'email' => 'admin@example.com',
+              'password' => Hash::make('password')
+          ]);
+      }
+  }
+  ```
+- **Migration best practices:**
+  - Always backup database before migrations
+  - Test migrations in development first
+  - Include rollback logic
+  - Use descriptive migration names
+  - Maintain referential integrity
+
+### 2.7 Common Issues & Troubleshooting
+- **Database Connection:**
+  - Verify MySQL is running
+  - Check database credentials
+  - Ensure database exists
+- **Composer Issues:**
+  - Clear composer cache
+  - Update composer
+  - Check PHP version
+- **Node.js Issues:**
+  - Clear npm cache
+  - Delete `node_modules` and reinstall
+- **Migration Issues:**
+  - Check migration logs
+  - Verify database connection and permissions
+  - Review error messages
+  - Test rollback procedures
+- **Login Problems:**
+  - Password reset
+  - Account lockout
+  - Browser or network issues
+- **Access Issues:**
+  - Permission errors
+  - Role assignment
+  - Feature availability
+- **Data Entry:**
+  - Form validation
+  - Required fields
+  - Data format
+  - Save errors
+
+### 2.8 Project Structure & Configuration (for Developers)
+- `system/` – Main Laravel application
+- `docs/` – Documentation source files
+- `database/migrations/` – Migration files
+- `database/seeders/` – Seeder files
+- `public/` – Public assets and entry point
+- `resources/views/` – Blade templates
+- `routes/` – Route definitions
+- `app/` – Application logic (controllers, models, services)
+
+### 2.9 Documentation Setup (for Contributors)
+- **Create and activate a virtual environment:**
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate
+  ```
+- **Install documentation tools:**
+  ```bash
+  pip install mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin
+  ```
+- **Run documentation server:**
+  ```bash
+  mkdocs serve
+  ```
+- **Build documentation for production:**
+  ```bash
+  mkdocs build
+  ```
+
+---
+
+## 3. Environment Variables
+
+### eCHIS Integration
+```
+ECHIS_API_URL=https://your-echis-api-url
+ECHIS_API_USERNAME=your_echis_username
+ECHIS_API_PASSWORD=your_echis_password
+```
+
+### HIE Integration
+```
+HIE_API_URL=https://your-hie-api-url
+HIE_API_KEY=your_hie_api_key
+```
+
+### SMS/CHP Notification
+```
+SMS_API_KEY=your_africastalking_api_key
+SMS_USERNAME=your_africastalking_username
+SMS_FROM=Angaza
+```
+
+---
+
+## 4. Artisan Commands
+
+### eCHIS Integration
+- Inbound sync (fetch from eCHIS):
+  ```bash
+  php artisan echis:sync-inbound
+  ```
+- Outbound sync (push to eCHIS):
+  ```bash
+  php artisan echis:sync-outbound
+  ```
+
+### HIE Integration
+- Facility/service sync:
+  ```bash
+  php artisan hie:sync-facilities
+  ```
+
+### Reporting/Analytics
+- Run feature tests:
+  ```bash
+  php artisan test --filter=FhirApiTest
+  ```
+
+---
+
+## 5. Scheduling & Automation
+- Add to `app/Console/Kernel.php`:
+  ```php
+  $schedule->command('echis:sync-inbound')->everyFifteenMinutes();
+  $schedule->command('echis:sync-outbound')->everyFifteenMinutes();
+  $schedule->command('hie:sync-facilities')->dailyAt('01:00');
+  ```
+- Add to crontab:
+  ```bash
+  * * * * * cd /path/to/angaza_referral3/system && php artisan schedule:run >> /dev/null 2>&1
+  ```
+
+---
+
+## 6. Core Features
+
+### Patient Journey & Referral Tree
+- Visualizes all referral transitions (escalation, down-referral, re-referral)
+- Clickable transitions open a modal with full referral details
+- Status, CHP assignment, and notification tracking
+- Audit trail of all status changes, visible in the UI
+
+### CHP Notification (SMS)
+- SMS sent to assigned CHP on down-referral or completion
+- Manual re-send button in referral details modal
+- Notification status tracked (`chp_notified`)
+- Configure SMS provider in `.env`
+
+### Reporting & Analytics
+- Access via `/reports/referral-volume`
+- Filter by status, facility, CHP, date range
+- Export to CSV
+- Interactive charts (Chart.js) for status breakdown and time series
+
+### HIE Fallback Logic
+- If HIE is unavailable, system falls back to local facility/service data
+- Logs fallback events for admin review
+
+### Security & Compliance
+- All credentials in `.env` (never commit secrets)
+- Role-based access control for sensitive actions
+- All status changes and notifications logged (audit trail)
+
+---
+
+## 7. Testing & Troubleshooting
+
+### Test Commands
+- Run all tests:
+  ```bash
+  php artisan test
+  ```
+- Run feature tests only:
+  ```bash
+  php artisan test --testsuite=Feature
+  ```
+- Run unit tests only:
+  ```bash
+  php artisan test --testsuite=Unit
+  ```
+- Run a specific test class:
+  ```bash
+  php artisan test --filter=FhirFormatTest
+  ```
+- Run integration tests (if available):
+  ```bash
+  php artisan test --filter=IntegrationCommandTest
+  ```
+- Inspect data with tinker:
+  ```bash
+  php artisan tinker
+  >>> App\Models\Patient::all();
+  >>> App\Models\Referral::all();
+  ```
+- Count patients and referrals:
+  ```bash
+  php artisan tinker --execute="echo 'Patients: ' . \\App\\Models\\Patient::count() . ', Referrals: ' . \\App\\Models\\Referral::count();"
+  ```
+- List patient IDs and UPIs:
+  ```bash
+  php artisan tinker --execute="foreach(\\App\\Models\\Patient::all(['id','upi']) as $p) { echo $p->id . ':' . $p->upi . PHP_EOL; }"
+  ```
+- If migrations or seeders fail:
+  ```bash
+  php artisan migrate:fresh --seed
+  ```
+- Check logs for sync, notification, or fallback errors
+
+---
+
+## 8. Quick Reference: Common Commands
+
+```bash
+# eCHIS
+php artisan echis:sync-inbound
+php artisan echis:sync-outbound
+
+# HIE
+php artisan hie:sync-facilities
+
+# Reporting
+php artisan test --filter=FhirApiTest
+
+# Testing
+php artisan test
+php artisan test --testsuite=Feature
+php artisan test --testsuite=Unit
+php artisan test --filter=FhirFormatTest
+
+# Migrate/seed
+php artisan migrate
+php artisan db:seed
+php artisan migrate:fresh --seed
+
+# Scheduler (run all scheduled tasks)
+php artisan schedule:run
+```
+
+---
+
+## 9. Best Practices
+- Test all integrations in a sandbox before production
+- Monitor logs and dashboards regularly
+- Use strong, unique API keys and rotate them periodically
+- Regularly back up your database and configuration
+- Review and update user/admin permissions as needed
+
+---
+
+## 10. Documentation & Support
+- Keep this README and user/admin guides up to date
+- Document all new features, commands, and workflows
+- For help, contact the project maintainer or open an issue
+
+---
+
+# Extended Reference & Diagrams
 
 ## Flowchart
 
@@ -133,76 +367,25 @@ _For more information, please refer to the [Documentation](docs.md)_
 
 The flowchart shows the high-level process flow for the patient referral system. The process begins with client registration, and continues with the capture of medical information and clinical summary. A referral is then created, and the referral status is tracked until feedback is received.
 
-## [](https://github.com/ernestnash/Referal_module#use-case-diagram)Use Case Diagram
+## Use Case Diagram
 
 [![Patient Referral System Use Case Diagram](https://camo.githubusercontent.com/b58326dc63821ceb16a80f70761f3ab38117cbf94d61f1dad47ae22aa1bbbac7/68747470733a2f2f696d6167657374756d2e626c6f622e636f72652e77696e646f77732e6e65742f6469616772616d732f526566657272616c25323076657273696f6e253230322d5573652d636173652532306469616772616d2e64726177696f2532302832292e706e67)](https://camo.githubusercontent.com/b58326dc63821ceb16a80f70761f3ab38117cbf94d61f1dad47ae22aa1bbbac7/68747470733a2f2f696d6167657374756d2e626c6f622e636f72652e77696e646f77732e6e65742f6469616772616d732f526566657272616c25323076657273696f6e253230322d5573652d636173652532306469616772616d2e64726177696f2532302832292e706e67)
 
 The use case diagram shows the different actors that interact with the patient referral system and the use cases that they can perform. The actors include the client, referring health worker, referral coordinator, receiving facility and shared health record
 
-## [](https://github.com/ernestnash/Referal_module#activity-diagram)Activity Diagram
+## Activity Diagram
 
 [![Patient Referral System Flowchart](https://camo.githubusercontent.com/5387418fb78d8aa7ce48b20fe7f7462d3770526ef4fc640a4560b787e138370f/68747470733a2f2f696d6167657374756d2e626c6f622e636f72652e77696e646f77732e6e65742f6469616772616d732f526566657272616c25323076657273696f6e253230322d506167652d362e64726177696f2e706e67)](https://camo.githubusercontent.com/5387418fb78d8aa7ce48b20fe7f7462d3770526ef4fc640a4560b787e138370f/68747470733a2f2f696d6167657374756d2e626c6f622e636f72652e77696e646f77732e6e65742f6469616772616d732f526566657272616c25323076657273696f6e253230322d506167652d362e64726177696f2e706e67)
 
 The flowchart shows the high-level process flow for the patient referral system. The process begins with client registration, and continues with the capture of medical information and clinical summary. A referral is then created, and the referral status is tracked until feedback is received.
 
-## [](https://github.com/ernestnash/Referal_module#data-flow-diagram)Data Flow Diagram
+## Data Flow Diagram
 
 [![Patient Referral System Data Flow Diagram](https://camo.githubusercontent.com/362bcd78c11ced03fe1282a136ceed85eda779c8af27ff941a28ce76115a567c/68747470733a2f2f696d6167657374756d2e626c6f622e636f72652e77696e646f77732e6e65742f6469616772616d732f5768617473417070253230496d616765253230323032332d30342d31342532306174253230322e35302e3136253230504d2e6a706567)](https://camo.githubusercontent.com/362bcd78c11ced03fe1282a136ceed85eda779c8af27ff941a28ce76115a567c/68747470733a2f2f696d6167657374756d2e626c6f622e636f72652e77696e646f77732e6e65742f6469616772616d732f5768617473417070253230496d616765253230323032332d30342d31342532306174253230322e35302e3136253230504d2e6a706567)
 
-The data flow diagram shows the flow of information in the patient referral system. The system captures information about clients, medical information, referrals, and feedback, and stores this information in a database. The information is then used to generate reports and provide feedback to the referring health worker.)
+The data flow diagram shows the flow of information in the patient referral system. The system captures information about clients, medical information, referrals, and feedback, and stores this information in a database. The information is then used to generate reports and provide feedback to the referring health worker.
 
 The activity diagram shows the detailed process flow for creating a referral in the patient referral system. The process begins with the creation of a new referral, and continues with the selection of the referral priority, entry of the diagnosis and reason for referral, selection of the physician/provider, and submission of the referral. The process concludes with the tracking of the referral status until feedback is received.
 
+---
 
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature-name`)
-3. Commit your Changes (`git commit -m 'Add Feature'`)
-4. Push to the Branch (`git push origin feature-name`)
-5. Submit a pull request explaining the changes you have made.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- LICENSE -->
-## License
-
-This referral system is open-source and released under the [MIT License](https://chat.openai.com/c/LICENSE). Feel free to use, modify, and distribute the code as per the terms of the license.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
-## Contact
-
-If you have any questions, suggestions, or feedback, please reach out to the project maintainers at info@appsoft.africa.
-
-Thank you for using the referral system!
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/TUM-HIS/Referral-Request-FrontEnd.svg?style=for-the-badge
-[contributors-url]: https://github.com/TUM-HIS/Referral-Request-FrontEnd.git/contributors
-
-[forks-shield]: https://img.shields.io/github/forks/TUM-HIS/Referral-Request-FrontEnd.svg?style=for-the-badge
-[forks-url]: https://github.com/TUM-HIS/Referral-Request-FrontEnd.git/network/members
-
-[stars-shield]: https://img.shields.io/github/stars/TUM-HIS/Referral-Request-FrontEnd.svg?style=for-the-badge
-[stars-url]: https://github.com/TUM-HIS/Referral-Request-FrontEnd.git/stargazers
-
-[issues-shield]: https://img.shields.io/github/issues/TUM-HIS/Referral-Request-FrontEnd.svg?style=for-the-badge
-[issues-url]: https://github.com/TUM-HIS/Referral-Request-FrontEnd-Template/issues
-
-[product-screenshot]: images/screenshot.png
-
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-
-check this website keenly and identify how to exchange data from eCHIS to angaza referral system. 
-
-check the patient journey: The application should fetch data (patient details and the user who updated patient on the eCHIS system) from eCHIS then insert data into the angaza database. The clinical team login to angaza then view patient and updates the system (if all the services need by the patient are available at that ficlity the patient is referred back to the community and payload update is sent back to eCHIS and the community health promoters (CHP) receives system notification and sms the client has been review by the doctor then they should follow with them at community level.) if the services need by the client aren't available at the facility, the system should have functionalities to refer to the next facility either same level or higher level. if a client visit next facility and there's need for moving upward to higher level facility the system should allow allow also that referral. Once the client receives services the system should be able to show client tree for referrals for every patient profile. Once the health facilify provider completes the client service the client is sent back to the community and the CHP to receive SMS notification. All the data for every facility service give will be picked from health information exchange (HIE) integration layer but also localy without integration should work as we wait for integration. Kindly check the current system and check areas for improvement with excellent stardards and conder FHIR and ICD-11
