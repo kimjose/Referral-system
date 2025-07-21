@@ -109,15 +109,16 @@
                             </table>
                         </div>
                         
-                        <!-- Centered Pagination and Summary with Icon -->
-                        <div class="d-flex flex-column align-items-center mt-4 gap-2">
-                            <div class="d-flex align-items-center gap-2 text-secondary">
-                                <i class="bi bi-people-fill fs-5"></i>
-                                <span>Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} results</span>
+                        <!-- Modern Minimal Pagination and Summary Section -->
+                        <hr class="mt-5 mb-4">
+                        <div class="d-flex flex-column align-items-center mb-5">
+                            <div class="text-muted mb-2 small">
+                                <i class="bi bi-people-fill"></i>
+                                Showing <strong>{{ $users->firstItem() }}</strong> to <strong>{{ $users->lastItem() }}</strong> of <strong>{{ $users->total() }}</strong> users
                             </div>
-                            <div>
+                            <nav aria-label="User pagination">
                                 {{ $users->withQueryString()->links() }}
-                            </div>
+                            </nav>
                         </div>
 
                     </div>
@@ -146,6 +147,20 @@
         min-height: 10px !important;
         vertical-align: middle;
         stroke-width: 2 !important;
+    }
+    /* Force chevron icon size in pagination */
+    .pagination .page-link i.bi {
+        font-size: 1rem !important;
+        width: 1em !important;
+        height: 1em !important;
+        vertical-align: middle;
+    }
+    /* Fix for any h1 in pagination (in case of markup error) */
+    .pagination h1 {
+        font-size: 1rem !important;
+        line-height: 1.2 !important;
+        margin: 0 !important;
+        display: inline !important;
     }
 </style>
 @endpush

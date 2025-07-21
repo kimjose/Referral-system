@@ -169,7 +169,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('user-management.show', Auth::user()->id) }}">
                             <i class="bi bi-person"></i>
                             <span>My Profile</span>
                         </a>
@@ -179,7 +179,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('user-management.edit', Auth::user()->id) }}">
                             <i class="bi bi-gear"></i>
                             <span>Account Settings</span>
                         </a>
@@ -189,7 +189,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                        <a class="dropdown-item d-flex align-items-center" href="/docs/user-guide/getting-started.md" target="_blank">
                             <i class="bi bi-question-circle"></i>
                             <span>Need Help?</span>
                         </a>

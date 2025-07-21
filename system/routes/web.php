@@ -174,3 +174,12 @@ Route::group(['middleware' => 'auth'], function () {
     // Group Management Routes
     Route::resource('groups', GroupController::class)->middleware('auth');
 });
+
+// Add API route for referral details (for referral journey modal)
+Route::get('/referral/api/details/{referralId}', [App\Http\Controllers\ReferralController::class, 'apiReferralDetails']);
+// FHIR REST API endpoints (protected by API key)
+Route::middleware('fhir_api')->group(function () {
+    Route::get('/api/fhir/referral/{referralId}', [App\Http\Controllers\ReferralController::class, 'apiFhirReferral']);
+    Route::get('/api/fhir/patient/{patientId}', [App\Http\Controllers\ReferralController::class, 'apiFhirPatient']);
+    Route::get('/api/fhir/patient/{patientId}/referral-bundle', [App\Http\Controllers\ReferralController::class, 'apiFhirReferralBundle']);
+});

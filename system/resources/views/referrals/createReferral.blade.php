@@ -173,22 +173,43 @@
 
                                                 <div class=" pb-1">
                                                     <label for="diagnosis">Diagnosis</label>
-                                                    <select id="diagnosis" name="diagnosis" class="form-control" required>
-                                                        <option>--- Select Diagnosis details ---</option>
-                                                        <!-- Populate diagnosis options dynamically using coded concepts -->
-                                                        @foreach($diagnosis as $reason)
-                                                            <option value="{{ $reason->id }}">{{ $reason->{'from concept name'} }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <script>
-                                                        $(document).ready(function() {
-                                                            // Initialize Select2
-                                                            $('#diagnosis').select2({
-                                                                placeholder: 'Type to search...',
-                                                                minimumInputLength: 1 // Minimum number of characters to trigger the autocomplete
-                                                            });
-                                                        });
-                                                    </script>
+                                                    <div class="row mb-3">
+    <label for="icd11_diagnosis" class="col-sm-2 col-form-label">Diagnosis (ICD-11)</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="icd11_diagnosis" name="diagnosis" autocomplete="off" placeholder="Type to search ICD-11 codes..." value="{{ old('diagnosis', $referral->diagnosis ?? '') }}">
+        <input type="hidden" id="icd11_code" name="icd11_code" value="{{ old('icd11_code', $referral->icd11_code ?? '') }}">
+        <div id="icd11_suggestions" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
+    </div>
+</div>
+@push('scripts')
+<script>
+document.getElementById('icd11_diagnosis').addEventListener('input', function() {
+    const query = this.value;
+    if (query.length < 3) {
+        document.getElementById('icd11_suggestions').innerHTML = '';
+        return;
+    }
+    fetch('https://knhts.health.go.ke/api/icd11/search?query=' + encodeURIComponent(query))
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+            if (data && data.length) {
+                data.forEach(item => {
+                    html += `<button type="button" class="list-group-item list-group-item-action" data-code="${item.code}" data-label="${item.label}">${item.code} - ${item.label}</button>`;
+                });
+            }
+            document.getElementById('icd11_suggestions').innerHTML = html;
+        });
+});
+document.getElementById('icd11_suggestions').addEventListener('click', function(e) {
+    if (e.target && e.target.matches('button[data-code]')) {
+        document.getElementById('icd11_diagnosis').value = e.target.getAttribute('data-label');
+        document.getElementById('icd11_code').value = e.target.getAttribute('data-code');
+        this.innerHTML = '';
+    }
+});
+</script>
+@endpush
                                                 </div>
 
                                                 <div class=" pb-1">

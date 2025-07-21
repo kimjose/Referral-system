@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @OA\OpenApi(
+ *   @OA\Info(
+ *     title="Angaza Referral System FHIR API",
+ *     version="1.0.0",
+ *     description="FHIR-compliant API for patient referrals, patients, and referral bundles. Secured by API key."
+ *   )
+ * )
+ */
+
 namespace App\Http\Controllers;
 use App\Models\m_f_l_s;
 use App\Models\Service;
@@ -25,567 +35,155 @@ class ReferralController extends Controller
         $this->fhirService = $fhirService;
     }
 
-    public function show($tab)
+    /**
+     * @OA\Get(
+     *     path="/api/fhir/referral/{referralId}",
+     *     summary="Get FHIR ServiceRequest for a referral",
+     *     tags={"FHIR"},
+     *     security={{"api_key":{}}},
+     *     @OA\Parameter(
+     *         name="referralId",
+     *         in="path",
+     *         required=true,
+     *         description="Referral ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="FHIR ServiceRequest resource",
+     *         @OA\JsonContent(type="object")
+     *     ),
+     *     @OA\Response(response=404, description="Referral not found")
+     * )
+     */
+    public function apiFhirReferral($referralId)
     {
-        $activeTab = $tab; // Store the active tab to determine which tab should be marked as active
-
-        if ($tab === 'tab1') {
-            $patientId = request()->input('patientId');
-
-            if ($patientId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
-            }
-
-            $patientDetails = Patient::where('id', $patientId)->first();
-
-            return view(
-                'referrals.referralProcess.tabs.tab1',
-                compact('activeTab')
-            )->with(['patient' => $patientDetails]);
-
-        } elseif ($tab === 'tab2') {
-            $diagnosis = Mappings::select('id', 'from concept name')->get();
-
-            $patientId = request()->input('patientId');
-
-            if ($patientId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
-            }
-
-            $patientDetails = Patient::where('id', $patientId)->first();
-
-            return view(
-                'referrals.referralProcess.tabs.tab2',
-                compact('activeTab')
-            )->with([
-                        'patient' => $patientDetails,
-                        'diagnosis' => $diagnosis
-                    ]);
-
-        } elseif ($tab === 'tab3') {
-            $serviceCategories = ServiceCategory::all();
-            $services = Service::all();
-            $facilities = m_f_l_s::all();
-
-            $referralId = request()->input('referralId');
-
-            if ($referralId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'Referral details not saved');
-            }
-
-            $referral = Referral::where('id', $referralId)->first();
-            if ($referral == null) {
-                $patientDetails = [];
-                return redirect()->route('referrals.worklist')->with('error', 'Referral not found');
-            } else {
-
-                $patientUpi = $referral->clientUPI;
-                $patientDetails = Patient::where('upi', $patientUpi)->first();
-
-                return view(
-                    'referrals.referralProcess.tabs.tab3',
-                    compact('activeTab')
-                )->with([
-                            'patient' => $patientDetails,
-                            'serviceCategories' => $serviceCategories,
-                            'services' => $services,
-                            'referralId' => $referralId,
-                            'facilities' => $facilities
-                        ]);
-
-            }
-        } elseif ($tab === 'tab4') {
-            return redirect()->route('referrals.worklist')->with('success', 'message sent successfully');
-        }
-        return redirect()->route('referrals.worklist')->with('error', 'No tab selected');
-    }
-
-
-
-
-    public function saveTabData($tab, Request $request)
-    {
-        $activeTab = $tab; // Store the active tab to determine which tab should be marked as active
-
-        $patientDetails = Patient::where('id', 1)->first();
-        $diagnosis = Mappings::select('id', 'from concept name')->get();
-        $serviceCategories = ServiceCategory::all();
-
-        if ($tab === 'tab1') {
-
-            $patientId = $request->input('patientId');
-            $patientName = $request->input('patientName');
-            $patientUPI = $request->input('patientUPI');
-
-
-            if ($patientId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
-            }
-            $patientDetails = Patient::where('id', $patientId)->first();
-
-            return redirect()->route(
-                'referral.tabs',
-                ['tab' => 'tab2', 'patientId' => $patientId, 'patientName' => $patientName, 'patientUPI' => $patientUPI, 'diagnosis' => $diagnosis, 'serviceCategories' => $serviceCategories]
-            );
-
-        } elseif ($tab === 'tab2') {
-
-            $patientId = $request->input('patientId');
-
-            if ($patientId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
-            }
-
-            $patientDetails = Patient::where('id', $patientId)->first();
-            $diagnosis = $request->input('diagnosis');
-            $historyInvestigation = $request->input('historyInvestigation');
-            $reasonReferral = $request->input('reasonReferral');
-            $priorityLevel = $request->input('priorityLevel');
-            $additionalNotes = $request->input('additionalNotes');
-
-            $referral = new Referral();
-            $referral->clientName = $patientDetails->name;
-            $referral->clientUPI = $patientDetails->upi;
-            $referral->referringOfficer = Auth::user()->name;
-            $referral->referring_facility_id = Auth::user()->facility_id;
-            $referral->historyInvestigation = $historyInvestigation;
-            $referral->diagnosis = $diagnosis;
-            $referral->reasonReferral = $reasonReferral;
-            $referral->priorityLevel = $priorityLevel;
-            $referral->additionalNotes = $additionalNotes;
-            $referral->save();
-            return view(
-                'referrals.referralProcess.tabs.tab3',
-                compact('activeTab')
-            )->with([
-                        'patient' => $patientDetails,
-                        "referral" => $referral,
-                        "activeTab" => "tab3",
-                    ]);
-
-        } elseif ($tab === 'tab3') {
-            $patientId = $request->input('patientId');
-            if ($patientId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'No patient selected');
-            }
-            $patientDetails = Patient::where('id', $patientId)->first();
-            $referralId = $request->input('referralId');
-            if ($referralId == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'Referral details not saved');
-            }
-            $referral = Referral::where('id', $referralId)->first();
-            if ($referral == null) {
-                return redirect()->route('referrals.worklist')->with('error', 'Referral not found');
-            }
-            return view(
-                'referrals.referralProcess.tabs.tab4'
-            )->with(['patient' => $patientDetails, 
-                        'referral' => $referral,
-                        'activeTab' => 'tab4'
-                    ]);
-        } elseif ($tab === 'tab2') {
-            return view(
-                'referrals.referralProcess.tabs.tab3',
-                compact('activeTab')
-            )->with([
-                        'patient' => $patientDetails,
-                        'diagnosis' => $diagnosis,
-                        'serviceCategories' => $serviceCategories
-                    ]);
-
-        } elseif ($tab === 'tab3') {
-
-            return view(
-                'referrals.referralProcess.tabs.tab4',
-                compact('activeTab')
-            )->with(['patient' => $patientDetails]);
-
-
-        } elseif ($tab === 'tab4') {
-
-
-
-        } else {
-            return "our engineers are working on the issue";
-        }
-    }
-
-
-
-    public function outgoingReferralTabs()
-    {
-        return view('referrals/referralProcess/tabs/outgoingReferralTabs');
-    }
-
-
-    public function index()
-    {
-        $referrals = [];
-        return view('referrals.index')->with(['referrals' => $referrals]);
-    }
-
-
-    public function addReferral()
-    {
-        return view('referrals.addReferral');
-    }
-
-    public function destroy(referral $referral)
-    {
-        $referralRequests = Referral::where('id', $referral->id)->first();
-
-        // Perform any additional checks or authorization if needed
-        if (!$referralRequests) {
-            return redirect()->route('referrals.outgoing')->with('error', 'Record not found');
-        }
-        // Delete the record
-        $referralRequests->delete();
-        return redirect()->route('referrals.outgoing.outgoing')->with('success', 'Record deleted successfully');
-    }
-
-    public function facilities()
-    {
-
-        return view('referrals.facilities');
-    }
-
-    public function medicalTerms()
-    {
-        return view('referrals.medicalTerms');
-    }
-
-    public function worklist()
-    {
-        $patients = Patient::all(); // Retrieve all patients from the database
-        return view('referrals.worklist', ['patients' => $patients]);
-    }
-
-
-    public function createreferal(Patient $patient)
-    {
-        $facilities = m_f_l_s::all();
-        $patientDetails = Patient::where('id', $patient->id)->first();
-        $diagnosis = Mappings::select('id', 'from concept name')->get();
-        return view('referrals.createReferral')->with(['facilities' => $facilities, 'patient' => $patientDetails, 'diagnosis' => $diagnosis]);
-    }
-
-    public function viewReferal(Referral $referral)
-    {
-        // $facilities = m_f_l_s::take(20)->get();
-        // $patientDetails = Patient::where('id', $patient->id)->first();
-        $referralRequests = Referral::where('id', $referral->id)->first();
-        $patientDetails = Patient::where('upi', $referral->clientUPI)->first();
-
-        $data = [
-            'referral' => $referralRequests,
-            'patient' => $patientDetails,
-        ];
-
-
-        return view('referrals.outgoing.viewReferral', $data);
-    }
-
-    public function viewIncomingReferal(Referral $referral)
-    {
-
-        // $facilities = m_f_l_s::take(20)->get();
-        // $patientDetails = Patient::where('id', $patient->id)->first();
-        $referralRequests = Referral::where('id', $referral->id)->first();
-        $patientDetails = Patient::where('upi', $referral->clientUPI)->first();
-
-        $data = [
-            'referral' => $referralRequests,
-            'patient' => $patientDetails,
-        ];
-
-
-        return view('referrals.incoming.viewReferral', $data);
-    }
-
-
-    public function submitReferral(Request $request)
-    {
-        // First validate the FHIR ServiceRequest
-        $validator = $this->fhirService->validateServiceRequest($request->all());
-        if ($validator->fails()) {
-            return response()->json(
-                $this->fhirService->createOperationOutcome('error', 'invalid', $validator->errors()->first()),
-                422
-            );
-        }
-
-        try {
-            $referral = new Referral();
-            $referral->fill($request->all());
-            $referral->save();
-
-            return response()->json([
-                'resourceType' => 'Bundle',
-                'type' => 'transaction-response',
-                'entry' => [
-                    [
-                        'response' => [
-                            'status' => '201 Created',
-                            'location' => "ServiceRequest/{$referral->id}"
-                        ]
-                    ]
-                ]
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json(
-                $this->fhirService->createOperationOutcome('error', 'processing', 'Error creating referral: ' . $e->getMessage()),
-                500
-            );
-        }
-    }
-
-
-
-    public function outgoing(){
-        $user = Auth::user();
-
-        // Check if the user has a facility assigned.
-        if (!$user->userFacility) {
-            // If not, redirect to the dashboard with an error message.
-            return redirect()->route('admin.dashboard')->with('error', 'You are not assigned to a facility and cannot view outgoing referrals.');
-        }
-
-        $loggedInuserFacilityCode = $user->userFacility->Code;
-        $referrals = Referral::where('referring_facility_id', $loggedInuserFacilityCode)
-            ->orderBy('created_at', 'desc')
-            ->get();
-        return view('referrals.outgoing.outgoing', ['referralRequests' => $referrals]);
-    }
-
-
-
-    public function incomingReferrals(){
-        $user = Auth::user();
-
-        // Check if the user has a facility assigned.
-        if (!$user->userFacility) {
-            // If not, redirect to the dashboard with an error message.
-            return redirect()->route('admin.dashboard')->with('error', 'You are not assigned to a facility and cannot view incoming referrals.');
-        }
-
-        $loggedInuserFacilityCode = $user->userFacility->Code;
-
-        $referrals = Referral::where('referredFacility', $loggedInuserFacilityCode)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('referrals.index')->with(['referralRequests' => $referrals]);
-    }
-
-
-
-    public function acceptReferralRequest(Referral $referral)
-    {
-        $referral->status = "Accepted"; // Assign the new value to the column
-        $referral->save();
-
-        $user = Auth::user();
-        $userFacility = $user->userFacility;
-        $userFacility->unreadNotifications
-            ->where('data.referral_id', $referral->id)
-            ->each(function ($notification) {
-                $notification->markAsRead();
-                // Perform any other necessary updates
-            });
-
-
-
-        $referralRequests = Referral::orderBy('created_at', 'desc')->get();
-        //$referralRequests = referralRequest::all();
-        return redirect()->route('referrals.incoming')->with(['referralRequests' => $referralRequests]);
-
-    }
-
-    public function rejectReferralRequest(Referral $referral)
-    {
-
-        $referral->status = "Rejected"; // Assign the new value to the column
-        $referral->save();
-
-        //changing the status of the notification
-        $user = Auth::user();
-        $userFacility = $user->userFacility;
-        $userFacility->unreadNotifications
-            ->where('data.referral_id', $referral->id)
-            ->each(function ($notification) {
-                $notification->markAsRead();
-                //you can add aditional code here for more functionality
-    
-            });
-
-        //sending notification to referral facility of rejected referral
-        $referralId = $referral->id;
-        $facility = m_f_l_s::where('Code', $referral->referring_facility_id)->first();
-        $notification = new ReferralRequestSent($referralId, $userFacility->Code, "Referral Request Rejected");
-
-        Notification::send($facility, $notification);
-
-        $referralRequests = Referral::orderBy('created_at', 'desc')->get();
-
-        return redirect()->route('referrals.incoming')->with(['referralRequests' => $referralRequests]);
-    }
-
-
-
-
-    public function reviewed()
-    {
-
-        return view('referrals.incoming.reviewed');
-    }
-
-    public function counterReferral()
-    {
-
-        return view('referrals.incoming.counter-referral');
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function fhirJson(Request $request)
-    {
-        // Check if legacy format is requested
-        if ($request->has('legacy') && $request->legacy === 'true') {
-            return response()->json([
-                'resourceType' => 'referralRequest',
-                "id" => "df792cca-af36-47ab-81b3-c9770fbe4bfd",
-                "status" => "active",
-                "subject"=> [
-                    "reference" => "https://client.registry/0-TGGA-rrTT",
-                    "code" => '0-TGGA-rrTT',
-                    "display"=> "John Doe"
-                ],
-                "priority"=> "STAT",
-                "requester"=> [
-                    "reference"=> "https://worker.registry/0-TGGA-TYRTT",
-                    "code" => "0-TGGA-TYRTT",
-                    "display"=> "Dr. Jane Smith"
-                ],
-                "specialty"=> [
-                    "coding"=> [
-                        "system"=> "http://nhdd.health.go.ke",
-                        "code"=> "394585001",
-                        "display"=> "Cardiology"
-                    ],
-                    "text" => "Cardiology"
-                ],
-                "recipient"=> [
-                    [
-                        "reference"=> "https://facility-registy.com/t6gr86gfrr",
-                        "code" => "t6gr86gfrr",
-                        "display" => "Coast General",
-                    ]
-                ],
-                "reasonCode"=> [
-                    "coding"=> [
-                        "system"=> "http://nhdd.health.go.ke/162864005",
-                        "code"=> "162864005",
-                        "display"=> "Chest pain"
-                    ],
-                    "text" => "Chest Pain",
-                ],
-                "authoredOn"=> "2023-04-13T12:00:00Z",
-                "reasonReference" => [
-                    [
-                        "reference" => 'https://shr.go.ke/345678',
-                        "code" => '345678',
-                        "display" => 'specialized treatment'
-                    ],
-                ],
-                "relevantHistory" => [
-                    [
-                        "reference" => 'https://shr.go.ke/43GS556GSG',
-                        "code" => '43GS556GSG',
-                        'display' => 'Malaria include vitals',
-                    ],
-                    [
-                        "reference" => 'https://shr.go.ke/43GS556G8G',
-                        "code" => '43GS556G8G',
-                        "display" => 'TB Infection',
-                    ]
-                ],
-                "type" => [
-                    "coding" => [
-                        "reference" => 'https://nhdd.go.ke/46765efg567',
-                        "code" => '46765efg567',
-                        "display" => 'Referral to cardiology service',
-                    ],
-                ],
-                "context" => [
-                    "reference" => "https://shr.go.ke/encounter/344S656S55S",
-                    "code" => "344S656S55S",
-                    "text" => "Episode 10",
-                ],
-                "supportingInfo" => [
-                    [
-                        "reference" => "https://shr.go.ke/34567823H",
-                        "code" => "34567823H",
-                        "text" => "Medical history, lab results and clinical notes and triage",
-                    ],
-                    [
-                        "reference" => "https://shr.go.ke/34567823H",
-                        "code" => "34567823H",
-                        "text" => "Medical history, lab results and clinical notes",
-                    ],
-                    [
-                        "reference" => "https://shr.go.ke/34567823H",
-                        "code" => "34567823H",
-                        "text" => "Medical history, lab results and clinical notes",
-                    ]
-                ]
-            ]);
-        }
-
-        // Default to new FHIR-compliant format
-        $referral = Referral::latest()->first();
-        
+        $referral = \App\Models\Referral::find($referralId);
         if (!$referral) {
-            return response()->json(
-                $this->fhirService->createOperationOutcome('error', 'not-found', 'No referral found'),
-                404
-            );
+            return response()->json(['error' => 'Referral not found'], 404);
         }
-
-        return response()->json($this->fhirService->referralToServiceRequest($referral));
+        $fhir = $this->fhirService->referralToServiceRequest($referral);
+        return response()->json($fhir);
     }
 
-    public function validateReferral(Request $request)
+    /**
+     * @OA\Get(
+     *     path="/api/fhir/patient/{patientId}",
+     *     summary="Get FHIR Patient resource",
+     *     tags={"FHIR"},
+     *     security={{"api_key":{}}},
+     *     @OA\Parameter(
+     *         name="patientId",
+     *         in="path",
+     *         required=true,
+     *         description="Patient ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="FHIR Patient resource",
+     *         @OA\JsonContent(type="object")
+     *     ),
+     *     @OA\Response(response=404, description="Patient not found")
+     * )
+     */
+    public function apiFhirPatient($patientId)
     {
-        $validator = $this->fhirService->validateServiceRequest($request->all());
-
-        if ($validator->fails()) {
-            return response()->json(
-                $this->fhirService->createOperationOutcome('error', 'invalid', $validator->errors()->first()),
-                422
-            );
+        $patient = \App\Models\Patient::find($patientId);
+        if (!$patient) {
+            return response()->json(['error' => 'Patient not found'], 404);
         }
+        $fhir = [
+            'resourceType' => 'Patient',
+            'id' => $patient->id,
+            'identifier' => [
+                [
+                    'system' => 'http://health.go.ke/upi',
+                    'value' => $patient->upi
+                ]
+            ],
+            'name' => [[
+                'family' => $patient->last_name,
+                'given' => [$patient->first_name]
+            ]],
+            'gender' => $patient->gender,
+            'birthDate' => $patient->date_of_birth,
+            'address' => [[
+                'text' => trim("{$patient->village}, {$patient->subCounty}, {$patient->county}, {$patient->country}", ', ')
+            ]],
+            'telecom' => [
+                [
+                    'system' => 'phone',
+                    'value' => $patient->telephone ?? $patient->phone ?? null
+                ]
+            ],
+        ];
+        return response()->json($fhir);
+    }
 
-        return response()->json(
-            $this->fhirService->createOperationOutcome('information', 'informational', 'Referral is valid')
-        );
+    /**
+     * @OA\Get(
+     *     path="/api/fhir/patient/{patientId}/referral-bundle",
+     *     summary="Get FHIR Bundle for a patient's full referral chain",
+     *     tags={"FHIR"},
+     *     security={{"api_key":{}}},
+     *     @OA\Parameter(
+     *         name="patientId",
+     *         in="path",
+     *         required=true,
+     *         description="Patient ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="FHIR Bundle resource",
+     *         @OA\JsonContent(type="object")
+     *     ),
+     *     @OA\Response(response=404, description="Patient not found")
+     * )
+     */
+    public function apiFhirReferralBundle($patientId)
+    {
+        $patient = \App\Models\Patient::find($patientId);
+        if (!$patient) {
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
+        $referrals = \App\Models\Referral::where('clientUPI', $patient->upi)->orderBy('created_at')->get();
+        $bundle = [
+            'resourceType' => 'Bundle',
+            'type' => 'collection',
+            'entry' => []
+        ];
+        // Add Patient resource
+        $bundle['entry'][] = [
+            'resource' => [
+                'resourceType' => 'Patient',
+                'id' => $patient->id,
+                'identifier' => [[
+                    'system' => 'http://health.go.ke/upi',
+                    'value' => $patient->upi
+                ]],
+                'name' => [[
+                    'family' => $patient->last_name,
+                    'given' => [$patient->first_name]
+                ]],
+                'gender' => $patient->gender,
+                'birthDate' => $patient->date_of_birth,
+                'address' => [[
+                    'text' => trim("{$patient->village}, {$patient->subCounty}, {$patient->county}, {$patient->country}", ', ')
+                ]],
+                'telecom' => [[
+                    'system' => 'phone',
+                    'value' => $patient->telephone ?? $patient->phone ?? null
+                ]],
+            ]
+        ];
+        // Add all referrals as ServiceRequest resources
+        foreach ($referrals as $referral) {
+            $bundle['entry'][] = [
+                'resource' => $this->fhirService->referralToServiceRequest($referral)
+            ];
+        }
+        return response()->json($bundle);
     }
 }
